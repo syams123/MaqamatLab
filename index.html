@@ -127,6 +127,25 @@
         </div>
       </div>
 
+      <!-- Tingkat Suara (Thabaqat) Tilawah -->
+          <div class="mt-3 pt-3 border-t border-slate-800/80">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Tingkat Suara (Thabaqat)</span>
+              <span class="text-[10px] text-amber-400 font-semibold">🔒 Pro: Jawab & Jawabul Jawab</span>
+            </div>
+            <div class="flex gap-1.5">
+              <button id="thabaqat-qoror" onclick="setThabaqat('qoror')" class="flex-1 py-1.5 px-2 rounded-lg text-[10px] font-bold bg-emerald-500 text-slate-950 transition">
+                1. Qoror (Dasar)
+              </button>
+              <button id="thabaqat-jawab" onclick="setThabaqat('jawab')" class="flex-1 py-1.5 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-slate-300 border border-slate-700 hover:border-slate-500 transition">
+                2. Jawab (Menengah)
+              </button>
+              <button id="thabaqat-jawabul" onclick="setThabaqat('jawabul')" class="flex-1 py-1.5 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-slate-300 border border-slate-700 hover:border-slate-500 transition">
+                3. Jawabul Jawab
+              </button>
+            </div>
+          </div>
+
       <!-- AUDIO REFERENCE & SAMPLE PLAYER -->
       <div class="bg-brand-card border border-brand-border rounded-2xl p-5">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-brand-border">
@@ -521,124 +540,156 @@
   </div>
 
   <!-- ==================== JAVASCRIPT AUDIO & APP ENGINE ==================== -->
-  <script>
-    // 1. DATABASE 8 MAQAMAT UTAMA HADRAH & TILAWAH (Interval dalam Cents dari Qarar = 0)
+ <script>
+    // 1. DATABASE 8 NAGHAM POKOK TILAWAH & QASIDAH + CABANG VARIASI & TINGKATAN SUARA
     const MAQAM_DATA = {
       bayati: {
         id: 'bayati',
-        name: 'Bayati',
-        arabic: 'بَيَاتِي',
+        name: 'Bayyati (Husaini)',
+        arabic: 'بَيَاتِي / حُسَيْنِي',
         isPro: false,
-        desc: 'Karakter sendu, syahdu, dan lembut. Nada ke-2 turun seperempat nada (half-flat / 150 cents). Paling sering dipakai membuka Mahallul Qiyam & Adzan.',
+        tempoChar: 'Gerak Lambat • Penuh Semangat & Khidmat',
+        levels: ['Qoror (Dasar)', 'Jawab (Menengah)', 'Jawabul Jawab (Tinggi)'],
+        branches: ['Syuri', 'Husaini', 'Bayyati Penutup (2 Bentuk)'],
+        desc: 'Nagham pembuka sekaligus wajib menjadi Bayyati Penutup pada susunan tilawah formal. Nada ke-2 turun ¼ nada (150 cents / half-flat).',
         intervals: [0, 150, 300, 500, 700, 800, 1000, 1200],
-        labels: ['Qarar (1)', 'Sikah 2 (½♭)', '3♭', 'Nawa (4)', 'Husaini (5)', '6♭', '7♭', 'Jawab (8)'],
+        labels: ['Qoror (1)', 'Sikah 2 (½♭)', '3♭', 'Nawa (4)', 'Husaini (5)', '6♭', '7♭', 'Jawab (8)'],
         miftahPattern: [
-          { deg: 0, dur: 0.40 }, { deg: 2, dur: 0.35 }, { deg: 3, dur: 0.55 },
-          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.45 }, { deg: 0, dur: 0.90 }
-        ],
-        audioUrl: ''
+          { deg: 0, dur: 0.45 }, { deg: 2, dur: 0.40 }, { deg: 3, dur: 0.60 },
+          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.45 }, { deg: 0, dur: 0.95 }
+        ]
       },
       nahawand: {
         id: 'nahawand',
-        name: 'Nahawand',
-        arabic: 'نَهَاوَنْد',
+        name: 'Nahawand (Iraqi)',
+        arabic: 'نَهَاوَنْد / عِرَاقِي',
         isPro: false,
-        desc: 'Karakter romantis, sedih elegan, dan menyentuh. Mirip tangga nada Minor Harmonis Barat sehingga mudah dipadukan dengan musik modern.',
+        tempoChar: 'Gerak Cepat & Ringan • Penuh Semangat',
+        levels: ['Jawab (Menengah)', 'Jawabul Jawab (Tinggi)'],
+        branches: ['Nuqrosy (Variasi Nada Rendah/Turun)', 'Murokkab (Variasi Nada Tinggi/Naik)'],
+        desc: 'Terdiri dari 5 bentuk & 2 variasi selingan (Nuqrosy & Murokkab). Berkarakter romantis-elegan dan bergerak ringan.',
         intervals: [0, 200, 300, 500, 700, 800, 1100, 1200],
-        labels: ['Qarar (1)', '2', '3♭', 'Nawa (4)', '5', '6♭', '7♮', 'Jawab (8)'],
+        labels: ['Qoror (1)', '2', '3♭', 'Nawa (4)', '5', '6♭', '7♮', 'Jawab (8)'],
         miftahPattern: [
-          { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.30 }, { deg: 2, dur: 0.40 }, { deg: 4, dur: 0.60 },
-          { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.85 }
-        ],
-        audioUrl: ''
+          { deg: 0, dur: 0.32 }, { deg: 1, dur: 0.28 }, { deg: 2, dur: 0.36 }, { deg: 4, dur: 0.55 },
+          { deg: 3, dur: 0.32 }, { deg: 2, dur: 0.32 }, { deg: 1, dur: 0.32 }, { deg: 0, dur: 0.85 }
+        ]
       },
       kurdi: {
         id: 'kurdi',
-        name: 'Kurdi',
+        name: 'Kurdi (Cabang Populer)',
         arabic: 'كُرْدِي',
         isPro: false,
-        desc: 'Sangat populer di nasyid & shalawat kontemporer (seperti Deen Assalam). Derajat ke-2 turun setengah nada penuh (100 cents) tanpa quarter-tone.',
+        tempoChar: 'Gerak Lembut • Populer di Nasyid & Shalawat',
+        levels: ['Qoror (Dasar)', 'Jawab (Menengah)'],
+        branches: ['Cabang dari Jiharka & Bayyati', 'Kurd'],
+        desc: 'Variasi dari Jiharka yang sangat digemari pada qasidah modern. Nada ke-2 turun ½ nada penuh (100 cents) tanpa quarter-tone.',
         intervals: [0, 100, 300, 500, 700, 800, 1000, 1200],
-        labels: ['Qarar (1)', '2♭', '3♭', 'Nawa (4)', '5', '6♭', '7♭', 'Jawab (8)'],
+        labels: ['Qoror (1)', '2♭', '3♭', 'Nawa (4)', '5', '6♭', '7♭', 'Jawab (8)'],
         miftahPattern: [
           { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.45 }, { deg: 3, dur: 0.55 },
           { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.85 }
-        ],
-        audioUrl: ''
-      },
-      hijaz: {
-        id: 'hijaz',
-        name: 'Hijaz',
-        arabic: 'حِجَاز',
-        isPro: true,
-        desc: 'Karakter dramatis, magis, dan penuh kerinduan. Ciri khasnya adalah loncatan lebar 1½ nada (300 cents) antara derajat ke-2 dan ke-3.',
-        intervals: [0, 100, 400, 500, 700, 800, 1000, 1200],
-        labels: ['Qarar (1)', '2♭', '3♮ (Lompat)', 'Nawa (4)', '5', '6♭', '7♭', 'Jawab (8)'],
-        miftahPattern: [
-          { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.55 }, { deg: 3, dur: 0.60 },
-          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.90 }
-        ],
-        audioUrl: ''
+        ]
       },
       shoba: {
         id: 'shoba',
-        name: 'Shoba',
-        arabic: 'صَبَا',
+        name: 'Shoba (Maya)',
+        arabic: 'صَبَا / مَايَا',
         isPro: true,
-        desc: 'Karakter paling menyayat hati, haru mendalam, dan memohon. Ciri mutlaknya ada pada nada ke-2 half-flat (150c) dan nada ke-4 yang turun (400c).',
+        tempoChar: 'Gerak Ringan & Cepat • Haru Menyayat Hati',
+        levels: ['Jawab (Menengah)', 'Jawabul Jawab (Tinggi)'],
+        branches: ['Ajami (Al-Ajam)', 'Mahur (Muhur)', 'Bastanjar'],
+        desc: 'Terdiri dari 5 bentuk dengan 3 variasi (Ajami, Mahur, Bastanjar). Ciri khasnya nada ke-2 half-flat (150c) dan nada ke-4 merendah (400c).',
         intervals: [0, 150, 300, 400, 700, 800, 1000, 1200],
-        labels: ['Qarar (1)', '2 (½♭)', '3♭', '4♭ (Khas Shoba)', '5', '6♭', '7♭', 'Jawab (8)'],
+        labels: ['Qoror (1)', '2 (½♭)', '3♭', '4♭ (Khas Shoba)', '5', '6♭', '7♭', 'Jawab (8)'],
         miftahPattern: [
-          { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 3, dur: 0.60 },
-          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.45 }, { deg: 0, dur: 0.90 }
-        ],
-        audioUrl: ''
+          { deg: 0, dur: 0.32 }, { deg: 1, dur: 0.32 }, { deg: 2, dur: 0.36 }, { deg: 3, dur: 0.55 },
+          { deg: 2, dur: 0.32 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.85 }
+        ]
       },
-      rast: {
-        id: 'rast',
-        name: 'Rast',
-        arabic: 'رَاسْت',
+      hijaz: {
+        id: 'hijaz',
+        name: 'Hijazi (Hijaz)',
+        arabic: 'حِجَازِي / حِجَاز',
         isPro: true,
-        desc: 'Karakter gagah, tegas, dan berwibawa. Memiliki dua nada seperempat nada (half-flat) pada derajat ke-3 (350 cents) dan ke-7 (1050 cents).',
-        intervals: [0, 200, 350, 500, 700, 900, 1050, 1200],
-        labels: ['Qarar (1)', '2', 'Sikah 3 (½♭)', 'Nawa (4)', '5', '6', 'Awj 7 (½♭)', 'Jawab (8)'],
+        tempoChar: 'Gerak Lambat & Khidmat • Penuh Semangat',
+        levels: ['Qoror (Dasar)', 'Jawab (Menengah)', 'Jawabul Jawab (Tinggi)'],
+        branches: ['Kard', 'Kard-Kurd', 'Naqrisy / Noqrosy', 'Kurd'],
+        desc: 'Terdiri dari 7 bentuk & 4 variasi (Kard, Kard-Kurd, Naqrisy, Kurd). Lompatan lebar 1½ nada (300 cents) antara derajat ke-2 dan ke-3.',
+        intervals: [0, 100, 400, 500, 700, 800, 1000, 1200],
+        labels: ['Qoror (1)', '2♭', '3♮ (Lompat)', 'Nawa (4)', '5', '6♭', '7♭', 'Jawab (8)'],
         miftahPattern: [
-          { deg: 0, dur: 0.40 }, { deg: 1, dur: 0.30 }, { deg: 2, dur: 0.45 }, { deg: 4, dur: 0.60 },
-          { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 0, dur: 0.85 }
-        ],
-        audioUrl: ''
-      },
-      ajam: {
-        id: 'ajam',
-        name: '\'Ajam / Jiharkah',
-        arabic: 'عَجَم / جِهَارْكَاه',
-        isPro: true,
-        desc: 'Karakter cerah, optimis, megah, dan penuh sukacita. Sangat serasi untuk qasidah bertempo semangat dan perayaan besar.',
-        intervals: [0, 200, 400, 500, 700, 900, 1100, 1200],
-        labels: ['Qarar (1)', '2', '3♮ (Cerah)', 'Nawa (4)', '5', '6', '7♮', 'Jawab (8)'],
-        miftahPattern: [
-          { deg: 0, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 4, dur: 0.55 },
-          { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.85 }
-        ],
-        audioUrl: ''
+          { deg: 0, dur: 0.40 }, { deg: 1, dur: 0.38 }, { deg: 2, dur: 0.60 }, { deg: 3, dur: 0.65 },
+          { deg: 2, dur: 0.38 }, { deg: 1, dur: 0.42 }, { deg: 0, dur: 0.95 }
+        ]
       },
       sika: {
         id: 'sika',
         name: 'Sika',
         arabic: 'سِيكَاه',
         isPro: true,
-        desc: 'Karakter sangat khas Timur Tengah dan mendayu. Nada dasarnya sendiri merupakan pijakan half-flat yang unik.',
+        tempoChar: 'Gerak Lambat & Khidmat • Mendayu Khas Arab',
+        levels: ['Qoror (Dasar)', 'Jawab (Menengah)', 'Jawabul Jawab (Tinggi)'],
+        branches: ['Misri', 'Turki', 'Romi / Roml', 'Uraq / Uroq'],
+        desc: 'Terdiri dari 6 bentuk & 4 variasi selingan (Misri, Turki, Roml, Uroq) dengan 3 tingkatan suara lengkap (Qoror, Jawab, Jawabul Jawab).',
         intervals: [0, 150, 350, 500, 700, 850, 1050, 1200],
-        labels: ['Qarar Sikah', '2', '3 (½♭)', '4', '5', '6 (½♭)', '7 (½♭)', 'Jawab (8)'],
+        labels: ['Qoror Sikah', '2', '3 (½♭)', '4', '5', '6 (½♭)', '7 (½♭)', 'Jawab (8)'],
         miftahPattern: [
-          { deg: 0, dur: 0.45 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.50 },
-          { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.85 }
-        ],
-        audioUrl: ''
+          { deg: 0, dur: 0.48 }, { deg: 1, dur: 0.38 }, { deg: 2, dur: 0.55 },
+          { deg: 1, dur: 0.38 }, { deg: 0, dur: 0.90 }
+        ]
+      },
+      rast: {
+        id: 'rast',
+        name: 'Rasta \'Alan Nawa (Rost)',
+        arabic: 'رَاسْت عَلَى النَّوَى',
+        isPro: true,
+        tempoChar: 'Gerak Ringan & Cepat • Gagah Berwibawa',
+        levels: ['Jawab (Menengah)', 'Jawabul Jawab (Tinggi)'],
+        branches: ['Rost Pembuka', 'Usyaq', 'Zanjiran (Zinjiron)', 'Syabir Alarros'],
+        desc: 'Diawali Rost sebagai pembuka lalu disambung Rasta \'Alan Nawa. Memiliki 7 bentuk & 3 variasi (Usyaq, Zanjiran, Syabir Alarros).',
+        intervals: [0, 200, 350, 500, 700, 900, 1050, 1200],
+        labels: ['Qoror (1)', '2', 'Sikah 3 (½♭)', 'Nawa (4)', '5', '6', 'Awj 7 (½♭)', 'Jawab (8)'],
+        miftahPattern: [
+          { deg: 0, dur: 0.36 }, { deg: 1, dur: 0.28 }, { deg: 2, dur: 0.42 }, { deg: 4, dur: 0.55 },
+          { deg: 3, dur: 0.32 }, { deg: 2, dur: 0.36 }, { deg: 0, dur: 0.85 }
+        ]
+      },
+      jiharka: {
+        id: 'jiharka',
+        name: 'Jiharka (\'Ajam)',
+        arabic: 'جِهَارْكَاه / عَجَم',
+        isPro: true,
+        tempoChar: 'Fleksibel (Ringan Cepat atau Lambat Khidmat)',
+        levels: ['Jawab (Menengah)', 'Jawabul Jawab (Tinggi)'],
+        branches: ['Kurdi (Variasi Utama)'],
+        desc: 'Terdiri dari 4 bentuk & 1 variasi (Kurdi). Temponya fleksibel: bisa ringan cepat penuh sukacita maupun lambat khidmat sesuai ayat.',
+        intervals: [0, 200, 400, 500, 700, 900, 1100, 1200],
+        labels: ['Qoror (1)', '2', '3♮ (Cerah)', 'Nawa (4)', '5', '6', '7♮', 'Jawab (8)'],
+        miftahPattern: [
+          { deg: 0, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 4, dur: 0.55 },
+          { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.85 }
+        ]
+      },
+      banjaka: {
+        id: 'banjaka',
+        name: 'Banjaka (Rakbi)',
+        arabic: 'بَنْجَكَاه / رَكْبِي',
+        isPro: true,
+        tempoChar: 'Khusus Tartil & Qasidah / Shalawat Hadrah',
+        levels: ['Qoror (Dasar)', 'Jawab (Menengah)'],
+        branches: ['Rakbi Qasidah', 'Tartil Klasik'],
+        desc: 'Nagham ke-8 yang secara khusus dipakai dalam lantunan Tartil Al-Qur\'an dan Qasidah/Shalawat (jarang dipakai dalam tilawah mujawwad).',
+        intervals: [0, 200, 350, 500, 700, 850, 1000, 1200],
+        labels: ['Qoror (1)', '2', '3 (½♭)', 'Nawa (4)', '5', '6 (½♭)', '7♭', 'Jawab (8)'],
+        miftahPattern: [
+          { deg: 0, dur: 0.38 }, { deg: 1, dur: 0.34 }, { deg: 2, dur: 0.45 }, { deg: 3, dur: 0.55 },
+          { deg: 4, dur: 0.45 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.38 }, { deg: 0, dur: 0.85 }
+        ]
       }
     };
 
-    // 2. NADA DASAR (QARAR)
+    // 2. NADA DASAR (QORAR) & TINGKATAN SUARA (THABAQAT)
     const ROOT_KEYS = [
       { label: 'C3', hz: 130.81 },
       { label: 'D3', hz: 146.83 },
@@ -647,188 +698,149 @@
       { label: 'G3', hz: 196.00 }
     ];
 
-    // 3. DATABASE 11 QASIDAH DENGAN NOTASI MELODI RIIL LAGU ASLI
+    const THABAQAT_MULTIPLIER = {
+      qoror: { label: 'Qoror (Rendah)', mult: 1.0 },
+      jawab: { label: 'Jawab / Nawa (Menengah)', mult: 1.5 }, // Naik 5th (Nawa)
+      jawabul: { label: 'Jawabul Jawab (Tinggi)', mult: 2.0 } // Naik 1 Oktaf penuh
+    };
+
+    // 3. DATABASE QASIDAH & CONTOH LANTUNAN
     const QASIDAH_LIST = [
       {
         title: 'Mahallul Qiyam (Ya Nabi Salam \'Alaika)',
         primaryMaqam: 'bayati',
         secondaryMaqam: 'hijaz',
         keyIndex: 1, // D3
-        rhythm: 'Zafin / Banjari',
+        rhythm: 'Bayyati Husaini • Lambat Khidmat',
         arabic: 'يَا نَبِي سَلَامْ عَلَيْكَ • يَا رَسُوْل سَلَامْ عَلَيْكَ',
         latin: 'Ya Nabi salam \'alaika • Ya Rasul salam \'alaika',
-        note: 'Buka dengan Bayati Qarar yang tenang. Masuk bait "Asyroqol Badru" naik ke Hijaz Jawab.',
+        note: 'Buka dengan Bayyati Qoror yang khidmat. Masuk bait "Asyroqol Badru" naik ke Hijaz Jawab.',
         melody: [
           { deg: 0, dur: 0.45 }, { deg: 2, dur: 0.45 }, { deg: 3, dur: 0.65 }, { deg: 3, dur: 0.35 },
           { deg: 3, dur: 0.40 }, { deg: 4, dur: 0.45 }, { deg: 3, dur: 0.40 }, { deg: 2, dur: 0.65 },
           { deg: 2, dur: 0.40 }, { deg: 1, dur: 0.40 }, { deg: 2, dur: 0.40 }, { deg: 3, dur: 0.55 },
           { deg: 2, dur: 0.40 }, { deg: 1, dur: 0.45 }, { deg: 0, dur: 0.90 }
-        ],
-        audioUrl: ''
+        ]
       },
       {
         title: 'Ya Asyiqol Musthofa',
         primaryMaqam: 'nahawand',
         secondaryMaqam: 'hijaz',
         keyIndex: 1, // D3
-        rhythm: 'Zafin Modern',
+        rhythm: 'Nahawand Iraqi • Gerak Cepat & Ringan',
         arabic: 'يَا عَاشِقَ الْمُصْطَفَى أَبْشِرْ بِنَيْلِ الْمُنَى',
         latin: 'Ya \'asyiqol Musthofa, absyir binailil muna',
-        note: 'Sangat nyaman di Nahawand. Bagian reff bisa diberi sentuhan Hijaz agar lebih menyentuh.',
+        note: 'Menggunakan gerak ringan Nahawand dengan variasi Murokkab (naik) di bagian reff.',
         melody: [
-          { deg: 0, dur: 0.45 }, { deg: 2, dur: 0.35 }, { deg: 4, dur: 0.55 }, { deg: 4, dur: 0.35 },
-          { deg: 5, dur: 0.45 }, { deg: 4, dur: 0.40 }, { deg: 3, dur: 0.65 },
-          { deg: 2, dur: 0.40 }, { deg: 3, dur: 0.35 }, { deg: 4, dur: 0.45 }, { deg: 3, dur: 0.35 },
-          { deg: 2, dur: 0.40 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.85 }
-        ],
-        audioUrl: ''
+          { deg: 0, dur: 0.35 }, { deg: 2, dur: 0.32 }, { deg: 4, dur: 0.50 }, { deg: 4, dur: 0.32 },
+          { deg: 5, dur: 0.40 }, { deg: 4, dur: 0.35 }, { deg: 3, dur: 0.60 },
+          { deg: 2, dur: 0.35 }, { deg: 3, dur: 0.32 }, { deg: 4, dur: 0.42 }, { deg: 3, dur: 0.32 },
+          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.85 }
+        ]
       },
       {
         title: 'Deen Assalam (Kullul Qulub)',
         primaryMaqam: 'kurdi',
-        secondaryMaqam: 'nahawand',
+        secondaryMaqam: 'jiharka',
         keyIndex: 1, // D3
-        rhythm: 'Nasyid / Hadrah Modern',
+        rhythm: 'Variasi Kurdi (Cabang Jiharka)',
         arabic: 'كُلُّ الْقُلُوْبِ إِلَى الْحَبِيْبِ تَمِيْلُ',
         latin: 'Kullul qulubi ilal habibi tamilu',
-        note: 'Contoh paling jelas untuk Maqam Kurdi. Perhatikan nada ke-2 rendah (100 cents) sejak suku kata pertama.',
+        note: 'Contoh paling jelas untuk variasi Kurdi dari tangga nada Jiharka.',
         melody: [
           { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.45 }, { deg: 3, dur: 0.55 },
           { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 0, dur: 0.80 }
-        ],
-        audioUrl: ''
+        ]
       },
       {
         title: 'Thola\'al Badru \'Alayna',
         primaryMaqam: 'hijaz',
         secondaryMaqam: 'bayati',
         keyIndex: 2, // E3
-        rhythm: 'Habsyi / Rebana Klasik',
+        rhythm: 'Hijazi • Lambat Khidmat',
         arabic: 'طَلَعَ الْبَدْرُ عَلَيْنَا • مِنْ ثَنِيَّاتِ الْوَدَاعِ',
         latin: 'Thola\'al badru \'alayna • Min tsaniyyatil wada\'',
-        note: 'Perhatikan loncatan nada ke-2 ke ke-3 khas Hijaz pada kata "Al-Badru".',
+        note: 'Karakter Hijazi khidmat dengan variasi Kard-Kurd pada kata "Al-Badru".',
         melody: [
           { deg: 0, dur: 0.40 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.45 }, { deg: 3, dur: 0.55 },
           { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 0, dur: 0.65 },
           { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.45 }, { deg: 3, dur: 0.50 },
           { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.85 }
-        ],
-        audioUrl: ''
+        ]
       },
       {
         title: 'Ya Robbana\'tarofna (Munajat)',
         primaryMaqam: 'shoba',
         secondaryMaqam: 'bayati',
         keyIndex: 1, // D3
-        rhythm: 'Munajat / Doa Penutup',
+        rhythm: 'Shoba Maya • Ringan & Menyayat Hati',
         arabic: 'يَا رَبَّنَا اعْتَرَفْنَا • بِأَنَّنَا اقْتَرَفْنَا',
         latin: 'Ya robbana\'tarofna • Bi annanaqtarofna',
-        note: 'Maqam Shoba sangat kuat membangkitkan rasa haru dan taubat saat bagian doa penutup majelis.',
+        note: 'Nuansa Shoba (Maya) dengan sentuhan variasi Bastanjar untuk doa munajat penutup.',
         melody: [
           { deg: 0, dur: 0.40 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 3, dur: 0.60 },
           { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.85 }
-        ],
-        audioUrl: ''
+        ]
       },
       {
         title: 'Qod Kafani \'Ilmu Robbi',
         primaryMaqam: 'rast',
         secondaryMaqam: 'bayati',
         keyIndex: 0, // C3
-        rhythm: 'Habsyi Gagah',
+        rhythm: 'Rasta \'Alan Nawa • Ringan & Cepat',
         arabic: 'قَدْ كَفَانِي عِلْمُ رَبِّي • مِنْ سُؤَالِي وَاخْتِيَارِي',
         latin: 'Qod kafani \'ilmu robbi • Min su-ali wakhtiyari',
-        note: 'Gunakan karakter Rast yang gagah dan tegas pada ketukan awal.',
+        note: 'Diawali Rost pembuka lalu masuk Rasta \'Alan Nawa yang tegas dan bersemangat.',
         melody: [
           { deg: 0, dur: 0.40 }, { deg: 2, dur: 0.40 }, { deg: 4, dur: 0.55 }, { deg: 4, dur: 0.35 },
           { deg: 5, dur: 0.40 }, { deg: 4, dur: 0.35 }, { deg: 3, dur: 0.40 }, { deg: 2, dur: 0.60 },
           { deg: 2, dur: 0.35 }, { deg: 3, dur: 0.35 }, { deg: 4, dur: 0.45 }, { deg: 3, dur: 0.35 },
           { deg: 2, dur: 0.40 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.85 }
-        ],
-        audioUrl: ''
+        ]
       },
       {
         title: 'Wulidal Musyarrof (Maulid Simtudduror)',
-        primaryMaqam: 'ajam',
-        secondaryMaqam: 'rast',
+        primaryMaqam: 'jiharka',
+        secondaryMaqam: 'kurdi',
         keyIndex: 0, // C3
-        rhythm: 'Habsyi Meriah',
+        rhythm: 'Jiharka • Cerah & Penuh Sukacita',
         arabic: 'وُلِدَ الْمُشَرَّفُ فِي رَبِيْعِ الْأَوَّلِ',
         latin: 'Wulidal musyarrofu fi robi\'il awwali',
-        note: 'Nuansa \'Ajam / Jiharkah yang cerah dan penuh sukacita menyambut kelahiran Nabi.',
+        note: 'Menggunakan Jiharka gerak cepat saat mahallul qiyam penuh kegembiraan.',
         melody: [
           { deg: 0, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 4, dur: 0.50 }, { deg: 4, dur: 0.35 },
           { deg: 5, dur: 0.40 }, { deg: 4, dur: 0.35 }, { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 0, dur: 0.80 }
-        ],
-        audioUrl: ''
+        ]
       },
       {
         title: 'Ya Hanana (Zhoharoddinul Mu\'ayyad)',
         primaryMaqam: 'sika',
         secondaryMaqam: 'rast',
         keyIndex: 2, // E3
-        rhythm: 'Banjari Cepat',
+        rhythm: 'Sika (Variasi Misri & Turki)',
         arabic: 'ظَهَرَ الدِّينُ الْمُؤَيَّدْ • بِظُهُورِ النَّبِي أَحْمَدْ',
         latin: 'Zhoharoddinul mu-ayyad • Bizhuhurin-nabi Ahmad',
-        note: 'Pijakan nada Sika memberikan nuansa gembira khas Timur Tengah.',
+        note: 'Pijakan Sika dengan variasi Misri yang sangat hidup.',
         melody: [
           { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.45 }, { deg: 2, dur: 0.35 },
           { deg: 3, dur: 0.40 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.55 },
           { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 3, dur: 0.45 },
           { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.80 }
-        ],
-        audioUrl: ''
+        ]
       },
       {
-        title: 'Busyrolana',
-        primaryMaqam: 'nahawand',
+        title: 'Qasidah Klasik Banjaka / Rakbi',
+        primaryMaqam: 'banjaka',
         secondaryMaqam: 'bayati',
         keyIndex: 1, // D3
-        rhythm: 'Pop Religi / Hadrah',
-        arabic: 'بُشْرَى لَنَا نِلْنَا الْمُنَى • زَالَ الْعَنَا وَافَى الْهَنَا',
-        latin: 'Busyrolana nilnal muna • Zalal \'ana wafal hana',
-        note: 'Tangga nada Nahawand membuat perpindahan suara 1 dan suara 2 sangat harmonis.',
+        rhythm: 'Banjaka (Rakbi) • Khusus Qasidah & Tartil',
+        arabic: 'صَلَاةُ اللهِ سَلَامُ اللهِ • عَلَى طٰهَ رَسُوْلِ اللهِ',
+        latin: 'Sholatullahi salamullahi • \'Ala Thoha Rasulillahi',
+        note: 'Nagham Banjaka/Rakbi secara khusus digunakan untuk Qasidah dan bacaan Tartil.',
         melody: [
-          { deg: 4, dur: 0.40 }, { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 4, dur: 0.55 },
-          { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.60 },
-          { deg: 2, dur: 0.35 }, { deg: 3, dur: 0.35 }, { deg: 4, dur: 0.50 }, { deg: 3, dur: 0.35 },
-          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.85 }
-        ],
-        audioUrl: ''
-      },
-      {
-        title: 'Roqqot \'Aina (Assalamu \'Alayka)',
-        primaryMaqam: 'hijaz',
-        secondaryMaqam: 'nahawand',
-        keyIndex: 1, // D3
-        rhythm: 'Ballad / Akapela',
-        arabic: 'رَقَّتْ عَيْنَايَ شَوْقًا • وَلِطَيْبَةَ ذَرَفَتْ عِشْقًا',
-        latin: 'Roqqot \'ainaya syauqon • Wa li Thoibata dzarofat \'isyqon',
-        note: 'Jaga artikulasi lembut di nada rendah sebelum naik ke puncak reff Assalamu \'Alayka.',
-        melody: [
-          { deg: 0, dur: 0.40 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.45 }, { deg: 2, dur: 0.35 },
-          { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 3, dur: 0.65 },
-          { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 },
-          { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.40 }, { deg: 0, dur: 0.85 }
-        ],
-        audioUrl: ''
-      },
-      {
-        title: 'Sholawat Jibril (Shollallahu \'Ala Muhammad)',
-        primaryMaqam: 'bayati',
-        secondaryMaqam: 'rast',
-        keyIndex: 2, // E3
-        rhythm: 'Bebas / Pembuka Majelis',
-        arabic: 'صَلَّى اللهُ عَلَى مُحَمَّد • صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ',
-        latin: 'Shollallahu \'ala Muhammad • Shollallahu \'alaihi wasallam',
-        note: 'Latihan terbaik untuk menguji kestabilan nada ke-2 half-flat Bayati.',
-        melody: [
-          { deg: 0, dur: 0.40 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.45 }, { deg: 3, dur: 0.55 },
-          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.65 },
-          { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 3, dur: 0.50 },
-          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.85 }
-        ],
-        audioUrl: ''
+          { deg: 0, dur: 0.40 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.45 }, { deg: 3, dur: 0.50 },
+          { deg: 4, dur: 0.45 }, { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.85 }
+        ]
       }
     ];
 
@@ -836,6 +848,7 @@
     let isPro = localStorage.getItem('maqamlab_pro') === 'true';
     let currentMaqamId = 'bayati';
     let currentKeyIndex = 1; // Default D3
+    let currentThabaqat = 'qoror'; // 'qoror', 'jawab', 'jawabul'
     let miftahInstrument = 'qanun'; // 'qanun' atau 'oud'
     let audioCtx = null;
     let isDronePlaying = false;
@@ -859,7 +872,6 @@
       loadRealInstrumentSamples();
     }
 
-    // PRO STATUS HANDLER
     function updateProUI() {
       const proBadge = document.getElementById('proBadge');
       const freeBadge = document.getElementById('freeBadge');
@@ -878,7 +890,6 @@
       }
     }
 
-    // TAB SWITCHING
     function switchTab(tabName) {
       ['studio', 'detector', 'kamus', 'ebook'].forEach(t => {
         document.getElementById(`view-${t}`).classList.add('hidden');
@@ -892,7 +903,6 @@
       activeBtn.classList.remove('border-transparent', 'text-slate-400');
     }
 
-    // INSTRUMENT SELECTOR (QANUN / OUD)
     function setMiftahInstrument(inst) {
       miftahInstrument = inst;
       const btnQanun = document.getElementById('inst-qanun');
@@ -923,7 +933,25 @@
       }
     }
 
-    // RENDER MAQAM BUTTONS
+    function setThabaqat(levelKey) {
+      if (levelKey !== 'qoror' && !isPro) {
+        openUpgradeModal();
+        return;
+      }
+      currentThabaqat = levelKey;
+      ['qoror', 'jawab', 'jawabul'].forEach(k => {
+        const el = document.getElementById(`thabaqat-${k}`);
+        if (!el) return;
+        el.className = k === levelKey
+          ? 'flex-1 py-1.5 px-2 rounded-lg text-[10px] font-bold bg-emerald-500 text-slate-950 transition'
+          : 'flex-1 py-1.5 px-2 rounded-lg text-[10px] font-bold bg-slate-900 text-slate-300 border border-slate-700 hover:border-slate-500 transition';
+      });
+      if (isDronePlaying) {
+        stopDrone();
+        startDrone();
+      }
+    }
+
     function renderMaqamButtons() {
       const grid = document.getElementById('maqamSelectorGrid');
       grid.innerHTML = '';
@@ -931,13 +959,7 @@
         const locked = m.isPro && !isPro;
         const active = m.id === currentMaqamId;
         const btn = document.createElement('button');
-        btn.onclick = () => {
-          if (locked) {
-            openUpgradeModal();
-          } else {
-            selectMaqam(m.id);
-          }
-        };
+        btn.onclick = () => locked ? openUpgradeModal() : selectMaqam(m.id);
         btn.className = `p-2.5 rounded-xl border text-left transition flex flex-col justify-between ${
           active
             ? 'bg-emerald-500/15 border-emerald-400 text-white shadow-md shadow-emerald-950/40'
@@ -945,16 +967,15 @@
         }`;
         btn.innerHTML = `
           <div class="flex items-center justify-between w-full gap-1">
-            <span class="font-bold text-xs sm:text-sm truncate">${m.name}</span>
-            ${locked ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 font-bold">🔒 PRO</span>' : '<span class="shrink-0 text-[10px] text-emerald-400 font-semibold">Gratis</span>'}
+            <span class="font-bold text-xs truncate">${m.name}</span>
+            ${locked ? '<span class="shrink-0 text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 font-bold">🔒 PRO</span>' : '<span class="shrink-0 text-[9px] text-emerald-400 font-semibold">Gratis</span>'}
           </div>
-          <span class="arabic-text text-sm text-slate-400 mt-0.5">${m.arabic}</span>
+          <span class="arabic-text text-xs text-slate-400 mt-0.5">${m.arabic}</span>
         `;
         grid.appendChild(btn);
       });
     }
 
-    // RENDER ROOT KEY BUTTONS
     function renderKeyButtons() {
       const grid = document.getElementById('keySelectorGrid');
       grid.innerHTML = '';
@@ -975,9 +996,20 @@
     function selectMaqam(id) {
       currentMaqamId = id;
       const m = MAQAM_DATA[id];
-      document.getElementById('activeMaqamTitle').textContent = `Maqam ${m.name}`;
-      document.getElementById('activeMaqamArabic').textContent = `مَقَام ${m.arabic}`;
-      document.getElementById('activeMaqamDesc').textContent = m.desc;
+      document.getElementById('activeMaqamTitle').textContent = `Nagham ${m.name}`;
+      document.getElementById('activeMaqamArabic').textContent = `نَغَم ${m.arabic}`;
+      document.getElementById('activeMaqamDesc').innerHTML = `
+        <span class="inline-block text-[11px] font-semibold text-amber-300 mb-1">⏱️ Karakter & Tempo: ${m.tempoChar}</span><br/>
+        ${m.desc}
+        <div class="mt-2.5 pt-2.5 border-t border-slate-800/80 flex flex-wrap items-center gap-1.5">
+          <span class="text-[10px] font-bold text-slate-400 uppercase">Cabang / Variasi Selingan:</span>
+          ${m.branches.map(b => `<span class="text-[10px] px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30">${b}</span>`).join('')}
+        </div>
+        <div class="mt-2 flex flex-wrap items-center gap-1.5">
+          <span class="text-[10px] font-bold text-slate-400 uppercase">Tingkat Suara Resmi:</span>
+          ${m.levels.map(l => `<span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">${l}</span>`).join('')}
+        </div>
+      `;
 
       const badgesContainer = document.getElementById('scaleNotesBadges');
       badgesContainer.innerHTML = '';
@@ -993,10 +1025,7 @@
         badgesContainer.appendChild(badge);
       });
 
-      document.getElementById('miftahSubtitle').textContent = m.audioUrl
-        ? 'Rekaman vokal asli Munsyid'
-        : `Petikan frasa ${m.name}`;
-
+      document.getElementById('miftahSubtitle').textContent = `Petikan frasa ${m.name}`;
       renderMaqamButtons();
       if (!isMicActive) drawCanvasIdle();
     }
@@ -1012,22 +1041,16 @@
       }
     }
 
-    // ==================== WEB AUDIO SYNTHESIZER (QANUN & OUD PLUCK ENGINE) ====================
+    // ==================== WEB AUDIO ENGINE & SAMPEL SLOOPLY ASLI ====================
     function ensureAudioContext() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
-    // BUFFER SAMPEL ASLI DARI SLOOPLY (Keduanya terdeteksi di C3)
     const SAMPLE_BUFFERS = { qanun: null, oud: null };
-
     const SAMPLE_BASE_HZ = {
-      qanun: 130.77, // Sesuai hasil deteksi C3 (-1 cent)
-      oud: 131.18    // Sesuai hasil deteksi C3 (+5 cents)
+      qanun: 130.77, // C3 (-1 cent) hasil deteksi 311_DI_01__Kanun.wav
+      oud: 131.18    // C3 (+5 cents) hasil deteksi 214_Ethnic (Oud).wav
     };
 
     async function loadRealInstrumentSamples() {
@@ -1043,10 +1066,7 @@
           if (!res.ok) continue;
           const arrayBuf = await res.arrayBuffer();
           SAMPLE_BUFFERS[key] = await audioCtx.decodeAudioData(arrayBuf);
-          console.log(`Sampel ${key} asli berhasil dimuat!`);
-        } catch (e) {
-          console.warn(`Menggunakan fallback synth untuk ${key}`);
-        }
+        } catch (e) {}
       }
     }
 
@@ -1054,7 +1074,6 @@
       const buffer = SAMPLE_BUFFERS[inst];
       if (!buffer) return false;
 
-      // Qanun bermain di oktaf terang (D4-G4), Oud bermain di oktaf hangat (D3-G3)
       const finalFreq = inst === 'oud' ? targetFreq * 0.5 : targetFreq;
       const playbackRate = finalFreq / SAMPLE_BASE_HZ[inst];
 
@@ -1080,7 +1099,10 @@
       return rootHz * Math.pow(2, cents / 1200);
     }
 
-    // 1. DRONE GENERATOR (Qarar + 5th)
+    function getActiveRootHz() {
+      return ROOT_KEYS[currentKeyIndex].hz * THABAQAT_MULTIPLIER[currentThabaqat].mult;
+    }
+
     function toggleDrone() {
       if (isDronePlaying) stopDrone();
       else startDrone();
@@ -1088,7 +1110,7 @@
 
     function startDrone() {
       ensureAudioContext();
-      const rootHz = ROOT_KEYS[currentKeyIndex].hz;
+      const rootHz = getActiveRootHz();
       const fifthHz = centsToFreq(rootHz, 700);
 
       droneOsc1 = audioCtx.createOscillator();
@@ -1134,74 +1156,49 @@
       document.getElementById('droneActionLabel').classList.replace('text-rose-400', 'text-emerald-400');
     }
 
-    // Petikan Qanun (Jernih, cerah, lapisan senar unison)
+    // Fallback Synth Qanun & Oud
     function pluckQanunNote(freq, startTime, duration) {
       const osc1 = audioCtx.createOscillator();
       const osc2 = audioCtx.createOscillator();
-      const harmonicOsc = audioCtx.createOscillator();
-
       osc1.type = 'sawtooth';
       osc2.type = 'triangle';
-      harmonicOsc.type = 'sine';
-
       osc1.frequency.setValueAtTime(freq, startTime);
       osc2.frequency.setValueAtTime(freq, startTime);
       osc2.detune.setValueAtTime(4, startTime);
-      harmonicOsc.frequency.setValueAtTime(freq * 2, startTime);
 
       const filter = audioCtx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.Q.setValueAtTime(2.2, startTime);
       filter.frequency.setValueAtTime(Math.min(4800, freq * 7), startTime);
       filter.frequency.exponentialRampToValueAtTime(Math.max(600, freq * 1.6), startTime + Math.min(duration, 0.65));
 
       const gain = audioCtx.createGain();
-      const harmGain = audioCtx.createGain();
-      harmGain.gain.setValueAtTime(0.08, startTime);
-      harmGain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.18);
-
       gain.gain.setValueAtTime(0.001, startTime);
       gain.gain.linearRampToValueAtTime(0.24, startTime + 0.008);
       gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration + 0.25);
 
       osc1.connect(filter);
       osc2.connect(filter);
-      harmonicOsc.connect(harmGain);
-      harmGain.connect(filter);
-
       filter.connect(gain);
       gain.connect(audioCtx.destination);
 
       const stopTime = startTime + duration + 0.3;
       osc1.start(startTime);
       osc2.start(startTime);
-      harmonicOsc.start(startTime);
       osc1.stop(stopTime);
       osc2.stop(stopTime);
-      harmonicOsc.stop(stopTime);
     }
 
-    // Petikan Oud / Gambus (Hangat, resonansi kayu, fretless bend halus)
     function pluckOudNote(freq, startTime, duration) {
       const oudFreq = freq * 0.5;
       const oscMain = audioCtx.createOscillator();
-      const oscBody = audioCtx.createOscillator();
-
       oscMain.type = 'triangle';
-      oscBody.type = 'sawtooth';
-
       oscMain.frequency.setValueAtTime(oudFreq * 0.991, startTime);
       oscMain.frequency.exponentialRampToValueAtTime(oudFreq, startTime + 0.028);
-      oscBody.frequency.setValueAtTime(oudFreq, startTime);
 
       const filter = audioCtx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.Q.setValueAtTime(1.5, startTime);
       filter.frequency.setValueAtTime(Math.min(2200, oudFreq * 5), startTime);
       filter.frequency.exponentialRampToValueAtTime(Math.max(320, oudFreq * 1.3), startTime + Math.min(duration, 0.55));
-
-      const bodyGain = audioCtx.createGain();
-      bodyGain.gain.setValueAtTime(0.09, startTime);
 
       const masterGain = audioCtx.createGain();
       masterGain.gain.setValueAtTime(0.001, startTime);
@@ -1209,20 +1206,14 @@
       masterGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration + 0.22);
 
       oscMain.connect(filter);
-      oscBody.connect(bodyGain);
-      bodyGain.connect(filter);
-
       filter.connect(masterGain);
       masterGain.connect(audioCtx.destination);
 
       const stopTime = startTime + duration + 0.28;
       oscMain.start(startTime);
-      oscBody.start(startTime);
       oscMain.stop(stopTime);
-      oscBody.stop(stopTime);
     }
 
-    // ENGINE PEMUTAR FRASA & MELODI SHALAWAT (QANUN / OUD)
     function playLegatoArabicMelody(maqamObj, rootHz, patternSteps) {
       ensureAudioContext();
       loadRealInstrumentSamples();
@@ -1256,30 +1247,22 @@
       return totalDuration;
     }
 
-    // 2. PLAY SULLAM (TANGGA NADA NAIK & TURUN)
     function playSullam() {
       const m = MAQAM_DATA[currentMaqamId];
-      const rootHz = ROOT_KEYS[currentKeyIndex].hz * 2;
+      const rootHz = getActiveRootHz() * 2;
       const steps = [];
       for (let i = 0; i < m.intervals.length; i++) steps.push({ deg: i, dur: 0.34 });
       for (let i = m.intervals.length - 2; i >= 0; i--) steps.push({ deg: i, dur: 0.34 });
       playLegatoArabicMelody(m, rootHz, steps);
     }
 
-    // 3. PLAY SAMPLE FRASA MIFTAH
     function playMiftahSample() {
       const m = MAQAM_DATA[currentMaqamId];
-      if (m.audioUrl) {
-        const player = document.getElementById('munsyidAudioPlayer');
-        player.src = m.audioUrl;
-        player.play();
-        return;
-      }
-      const rootHz = ROOT_KEYS[currentKeyIndex].hz * 2;
+      const rootHz = getActiveRootHz() * 2;
       playLegatoArabicMelody(m, rootHz, m.miftahPattern);
     }
 
-    // ==================== REAL-TIME PITCH DETECTOR (AUTOCORRELATION) ====================
+    // ==================== REAL-TIME PITCH DETECTOR ====================
     async function toggleMicrophone() {
       if (isMicActive) stopMicrophone();
       else await startMicrophone();
@@ -1322,7 +1305,7 @@
       document.getElementById('liveFreqHz').textContent = '0 Hz';
     }
 
-   function autoCorrelate(buf, sampleRate) {
+    function autoCorrelate(buf, sampleRate) {
       const maxLen = Math.min(buf.length, 1024);
       let rms = 0;
       for (let i = 0; i < maxLen; i++) rms += buf[i] * buf[i];
@@ -1340,7 +1323,6 @@
       const trimmedLen = r2 - r1;
       if (trimmedLen < 64) return -1;
 
-      // Fokus ke rentang fundamental vokal manusia (110 Hz - 650 Hz) agar tidak tertipu bass/rebana
       const minLag = Math.max(1, Math.floor(sampleRate / 650));
       const maxLag = Math.min(trimmedLen - 2, Math.floor(sampleRate / 110));
 
@@ -1357,9 +1339,7 @@
         }
         corrArr[lag] = corr;
 
-        if (!passedZero && corr < prevCorr) {
-          passedZero = true;
-        }
+        if (!passedZero && corr < prevCorr) passedZero = true;
         if (passedZero && corr > bestCorr) {
           bestCorr = corr;
           bestLag = lag;
@@ -1369,15 +1349,12 @@
 
       if (bestLag <= minLag || bestLag >= maxLag) return -1;
 
-      // Parabolic interpolation untuk menemukan puncak sub-sampel (presisi mikrotonal)
       const y1 = corrArr[bestLag - 1];
       const y2 = corrArr[bestLag];
       const y3 = corrArr[bestLag + 1];
       const denom = 2 * (2 * y2 - y1 - y3);
       const shift = denom !== 0 ? (y3 - y1) / denom : 0;
-      const exactLag = bestLag + shift;
-
-      return sampleRate / exactLag;
+      return sampleRate / (bestLag + shift);
     }
 
     function detectPitchLoop() {
@@ -1387,7 +1364,7 @@
       const freq = autoCorrelate(buffer, audioCtx.sampleRate);
 
       const m = MAQAM_DATA[currentMaqamId];
-      const rootHz = ROOT_KEYS[currentKeyIndex].hz;
+      const rootHz = getActiveRootHz();
 
       if (freq > 75 && freq < 900) {
         let rawCents = 1200 * Math.log2(freq / rootHz);
@@ -1512,7 +1489,7 @@
       }
     }
 
-    // ==================== ENGINE AI & DSP DETEKSI MAQAM AKURAT (8 MAQAM) ====================
+    // ==================== AI DETEKTOR NAGHAM & TUNER ====================
     let isScanningMic = false;
     let scanPitchSamples = [];
     let scanIntervalId = null;
@@ -1541,7 +1518,7 @@
         const btn = document.getElementById('btnAnalyzeMic');
         btn.textContent = '■ Selesai & Analisis Sekarang';
         btn.classList.replace('bg-emerald-500', 'bg-rose-500');
-        document.getElementById('recStatusText').textContent = 'Mendengarkan melodi shalawat...';
+        document.getElementById('recStatusText').textContent = 'Mendengarkan lantunan tilawah / shalawat...';
 
         const buffer = new Float32Array(analyser.fftSize);
         const sampleCollector = setInterval(() => {
@@ -1551,9 +1528,7 @@
           }
           analyser.getFloatTimeDomainData(buffer);
           const freq = autoCorrelate(buffer, audioCtx.sampleRate);
-          if (freq > 80 && freq < 850) {
-            scanPitchSamples.push(freq);
-          }
+          if (freq > 80 && freq < 850) scanPitchSamples.push(freq);
         }, 50);
 
         scanIntervalId = setInterval(() => {
@@ -1582,8 +1557,8 @@
       btn.classList.replace('bg-rose-500', 'bg-emerald-500');
       document.getElementById('recStatusText').textContent = 'Analisis selesai.';
 
-      if (scanPitchSamples.length < 15) {
-        alert('Suara terlalu singkat atau pelan. Coba senandungkan minimal 5-8 detik dengan jelas.');
+      if (scanPitchSamples.length < 10) {
+        alert('Suara terlalu singkat atau pelan. Coba lantunkan minimal 5-8 detik dengan jelas.');
         return;
       }
       runAccurateMaqamClassifier(scanPitchSamples);
@@ -1610,9 +1585,7 @@
         for (let i = 0; i < maxSamples - 1024; i += stepSize) {
           const slice = channelData.subarray(i, i + 1024);
           const freq = autoCorrelate(slice, sampleRate);
-          if (freq > 75 && freq < 900) {
-            extractedFreqs.push(freq);
-          }
+          if (freq > 75 && freq < 900) extractedFreqs.push(freq);
         }
 
         document.getElementById('recStatusText').textContent = 'Analisis selesai.';
@@ -1623,23 +1596,18 @@
         }
         runAccurateMaqamClassifier(extractedFreqs);
       } catch (err) {
-        console.error(err);
         alert('Gagal membaca file audio. Pastikan formatnya MP3 atau WAV yang valid.');
       } finally {
         event.target.value = '';
       }
     }
 
-    // 2. KLASIFIKATOR MAQAM + DETEKTOR NADA TUNGGAL (SINGLE-NOTE FINDER)
     function runAccurateMaqamClassifier(freqs) {
       const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-
-      // Hitung median frekuensi & jumlah nada unik (dalam kelipatan semitone)
       const sortedFreqs = [...freqs].sort((a, b) => a - b);
       const medianFreq = sortedFreqs[Math.floor(sortedFreqs.length / 2)];
       const uniqueSemitones = new Set(freqs.map(f => Math.round(69 + 12 * Math.log2(f / 440))));
 
-      // MODE A: JIKA YANG DIUNGGAH ADALAH SAMPEL 1–2 NADA TUNGGAL (SEPERTI ONE-SHOT QANUN/OUD)
       if (uniqueSemitones.size <= 2) {
         const midiExact = 69 + 12 * Math.log2(medianFreq / 440);
         const midiRound = Math.round(midiExact);
@@ -1651,19 +1619,15 @@
         document.getElementById('resPrimaryMaqam').textContent = `Nada Tunggal: ${noteName}${octave} (${medianFreq.toFixed(2)} Hz)`;
         document.getElementById('resConfidenceBadge').textContent = `Mode Tuner / One-Shot`;
         document.getElementById('resDetectedRoot').textContent = `Deviasi Tuning: ${centsOff >= 0 ? '+' : ''}${centsOff} cents dari ${noteName}${octave}`;
-
         document.getElementById('resScoreBars').innerHTML = `
           <div class="p-3 rounded-xl bg-slate-950/90 border border-amber-500/30 text-xs text-slate-300">
-            ℹ️ File ini hanya berisi <b>1 nada tunggal (${noteName}${octave})</b>, bukan melodi kalimat shalawat, sehingga belum bisa ditentukan maqamnya.
-            <br/><br/>
-            Untuk memakai file ini sebagai sampel instrumen di <b>MaqamLab</b>, isi <code class="text-amber-400">SAMPLE_BASE_HZ</code> dengan angka <b class="text-emerald-400">${medianFreq.toFixed(2)}</b>.
+            ℹ️ File ini hanya berisi <b>1 nada tunggal (${noteName}${octave})</b>, bukan melodi ayat/shalawat, sehingga belum bisa ditentukan naghamnya.
           </div>
         `;
-        document.getElementById('resExplanation').textContent = `Terdeteksi frekuensi fundamental stabil di ${medianFreq.toFixed(2)} Hz (${noteName}${octave}). Rekam atau unggah minimal 4–5 nada melodi berbeda untuk mendeteksi tangga nada maqam.`;
+        document.getElementById('resExplanation').textContent = `Terdeteksi frekuensi fundamental stabil di ${medianFreq.toFixed(2)} Hz (${noteName}${octave}). Rekam atau unggah minimal 4–5 nada melodi berbeda untuk mendeteksi nagham.`;
         return;
       }
 
-      // MODE B: JIKA YANG DIUNGGAH ADALAH MELODI SHALAWAT (>= 3 NADA BERBEDA)
       const BINS_PER_OCTAVE = 120;
       const histogram = new Float32Array(BINS_PER_OCTAVE);
 
@@ -1718,9 +1682,7 @@
               const d = Math.min(Math.abs(relCents - t), 1200 - Math.abs(relCents - t));
               if (d < minDist) minDist = d;
             });
-            if (minDist > 30) {
-              matchEnergy -= histogram[b] * 0.55;
-            }
+            if (minDist > 30) matchEnergy -= histogram[b] * 0.55;
           }
 
           const rawRatio = totalEnergy > 0 ? matchEnergy / (totalEnergy * 0.48) : 0;
@@ -1743,9 +1705,9 @@
       const tonicName = noteNames[nearestSemi] + (Math.abs(microOffset) >= 35 ? ' (½♯/♭)' : '');
 
       document.getElementById('detectorResultBox').classList.remove('hidden');
-      document.getElementById('resPrimaryMaqam').textContent = `Maqam ${bestResult.maqam.name} (${bestResult.maqam.arabic})`;
+      document.getElementById('resPrimaryMaqam').textContent = `Nagham ${bestResult.maqam.name} (${bestResult.maqam.arabic})`;
       document.getElementById('resConfidenceBadge').textContent = `Kecocokan ${bestResult.score}%`;
-      document.getElementById('resDetectedRoot').textContent = `Nada Tumpuan Dasar (Qarar): ${tonicName}`;
+      document.getElementById('resDetectedRoot').textContent = `Nada Tumpuan Dasar (Qoror): ${tonicName}`;
 
       const barsContainer = document.getElementById('resScoreBars');
       barsContainer.innerHTML = '';
@@ -1765,40 +1727,21 @@
         `;
       });
 
-      const explanations = {
-        bayati: 'Terdeteksi penekanan kuat pada derajat ke-2 seperempat nada (150 cents / half-flat) yang turun lembut menuju nada dasar Qarar. Karakter khas Maqam Bayati.',
-        hijaz: 'Terdeteksi lompatan interval lebar 1½ nada (300 cents) antara derajat ke-2 dan ke-3 yang sangat dramatis. Ciri khas utama Maqam Hijaz.',
-        shoba: 'Terdeteksi kombinasi khas derajat ke-2 half-flat (150 cents) dengan nada ke-4 yang merendah (400 cents), menghasilkan nuansa haru menyayat hati khas Maqam Shoba.',
-        rast: 'Terdeteksi pijakan mayor di nada ke-2 diikuti derajat ke-3 half-flat (350 cents) yang tegas dan berwibawa. Pola khas Maqam Rast.',
-        nahawand: 'Terdeteksi struktur tangga nada minor harmonis murni (200 & 300 cents) tanpa interval seperempat nada. Karakter khas Maqam Nahawand.',
-        kurdi: 'Terdeteksi penurunan setengah nada penuh pada derajat ke-2 (100 cents) dan ke-3 (300 cents) yang lembut dan modern. Ciri khas Maqam Kurdi.',
-        ajam: 'Terdeteksi interval mayor cerah (200 & 400 cents) yang bertenaga dan optimis tanpa quarter-tone. Karakter khas Maqam \'Ajam / Jiharkah.',
-        sika: 'Terdeteksi pijakan dasar half-flat yang langsung melangkah ke interval 150 dan 350 cents. Karakter khas Maqam Sika.'
-      };
-      document.getElementById('resExplanation').textContent = explanations[bestResult.maqam.id];
+      document.getElementById('resExplanation').textContent = `${bestResult.maqam.desc} (Cabang terkait: ${bestResult.maqam.branches.join(', ')}).`;
 
       document.getElementById('btnJumpDetected').onclick = () => {
-        if (bestResult.maqam.isPro && !isPro) {
-          openUpgradeModal();
-        } else {
+        if (bestResult.maqam.isPro && !isPro) openUpgradeModal();
+        else {
           selectMaqam(bestResult.maqam.id);
           switchTab('studio');
         }
       };
     }
 
-    // ==================== KAMUS QASIDAH PLAYER & RENDERER ====================
+    // ==================== KAMUS QASIDAH & TARTIL ====================
     function playQasidahMelody(qasidahIndex, btnEl) {
       const q = QASIDAH_LIST[qasidahIndex];
       const m = MAQAM_DATA[q.primaryMaqam];
-
-      if (q.audioUrl) {
-        const player = document.getElementById('munsyidAudioPlayer');
-        player.src = q.audioUrl;
-        player.play();
-        return;
-      }
-
       const rootHz = ROOT_KEYS[q.keyIndex].hz * 2;
       const totalDuration = playLegatoArabicMelody(m, rootHz, q.melody);
 
@@ -1834,8 +1777,8 @@
               <span class="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-amber-400 border border-slate-700">Kunci ${keyLabel}</span>
             </div>
             <div class="flex flex-wrap gap-1.5 mt-2">
-              <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Utama: ${primary.name}</span>
-              <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-sky-500/15 text-sky-400 border border-sky-500/30">Reff/Jawab: ${secondary.name}</span>
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Pokok: ${primary.name}</span>
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-sky-500/15 text-sky-400 border border-sky-500/30">Selingan/Jawab: ${secondary.name}</span>
               <span class="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-slate-400">${q.rhythm}</span>
             </div>
 
@@ -1849,7 +1792,7 @@
 
           <div class="mt-4 pt-3 border-t border-slate-800 grid grid-cols-2 gap-2">
             <button onclick="playQasidahMelody(${originalIndex}, this)" class="py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition flex items-center justify-center gap-1.5 shadow">
-              ▶ Putar Shalawat
+              ▶ Putar Melodi
             </button>
             <button onclick="loadQasidahToStudio('${q.primaryMaqam}', ${q.keyIndex})" class="py-2 px-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/40 font-bold text-xs transition flex items-center justify-center gap-1.5">
               🎙️ Latih di Studio
@@ -1890,13 +1833,12 @@
       if (validCodes.includes(input)) {
         isPro = true;
         localStorage.setItem('maqamlab_pro', 'true');
-        feedback.textContent = '✓ Berhasil! Seluruh 8 Maqam & E-Book Munsyid Pro telah aktif.';
+        feedback.textContent = '✓ Berhasil! Seluruh 8 Nagham Pokok, Cabang Selingan & Tingkat Suara Pro aktif.';
         feedback.className = 'text-[11px] mt-1.5 text-emerald-400 font-bold';
         updateProUI();
         renderMaqamButtons();
-        setTimeout(() => {
-          closeUpgradeModal();
-        }, 1200);
+        selectMaqam(currentMaqamId);
+        setTimeout(() => closeUpgradeModal(), 1200);
       } else {
         feedback.textContent = '✕ Kode tidak valid. Gunakan kode demo SYAMS2026 atau hubungi admin Syams Digital.';
         feedback.className = 'text-[11px] mt-1.5 text-rose-400';
@@ -1908,6 +1850,8 @@
     });
 
     init();
+   <script src="pitch.js"></script>
+   <script src="classifier.js"></script>
   </script>
 </body>
 </html>
