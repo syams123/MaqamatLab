@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MaqamLab — Pelatih Maqamat, AI Detektor & Kamus Shalawat | Syams Digital</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            arabic: ['"Amiri"', 'serif'],
+          },
+          colors: {
+            brand: {
+              dark: '#070F12',
+              card: '#0D1B20',
+              border: '#19323B',
+              emerald: '#10B981',
+              gold: '#F59E0B',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #070F12;
+      color: #F1F5F9;
+    }
+    .arabic-text {
+      font-family: 'Amiri', serif;
+      direction: rtl;
+      line-height: 2.1;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #070F12; }
+    ::-webkit-scrollbar-thumb { background: #1E3A44; border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: #10B981; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-200">
+
+  <!-- TOP NAVBAR -->
+  <header class="sticky top-0 z-40 bg-[#070F12]/90 backdrop-blur-md border-b border-brand-border">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center shadow-lg shadow-emerald-950/50 border border-emerald-400/30">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-extrabold text-lg tracking-tight text-white">MaqamLab</h1>
+            <span id="proBadge" class="hidden text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40">Munsyid Pro</span>
+            <span id="freeBadge" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">Versi Gratis</span>
+          </div>
+          <p class="text-[11px] text-slate-400">by <span class="text-emerald-400 font-semibold">Syams Digital</span> • Pelatih Vokal Hadrah & Tilawah</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="switchTab('ebook')" class="hidden sm:flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-slate-200 border border-slate-700 transition">
+          <span>📖</span> E-Book Panduan
+        </button>
+        <button id="upgradeBtnHeader" onclick="openUpgradeModal()" class="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-md shadow-amber-950/40 transition">
+          <span>👑</span> Buka Pro
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB NAVIGATION -->
+    <div class="max-w-6xl mx-auto px-4 flex gap-5 sm:gap-6 text-xs sm:text-sm font-semibold border-t border-brand-border/60 overflow-x-auto">
+      <button onclick="switchTab('studio')" id="tab-studio" class="py-3 border-b-2 border-emerald-400 text-emerald-400 whitespace-nowrap transition">
+        🎙️ Studio Latihan Maqam
+      </button>
+      <button onclick="switchTab('detector')" id="tab-detector" class="py-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">
+        🧠 AI Deteksi Maqam Lagu
+      </button>
+      <button onclick="switchTab('kamus')" id="tab-kamus" class="py-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">
+        📜 Kamus Nada Qasidah (8 Lagu)
+      </button>
+      <button onclick="switchTab('ebook')" id="tab-ebook" class="py-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">
+        📚 Modul E-Book Munsyid
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
+
+    <!-- ==================== TAB 1: STUDIO LATIHAN MAQAM ==================== -->
+    <section id="view-studio" class="space-y-6">
+      
+      <!-- CONTROL BAR: MAQAM & ROOT KEY -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        
+        <!-- Maqam Selector -->
+        <div class="lg:col-span-8 bg-brand-card border border-brand-border rounded-2xl p-4">
+          <div class="flex items-center justify-between mb-3">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">1. Pilih Tangga Nada Maqam (8 Lengkap)</label>
+            <span class="text-[11px] text-emerald-400">3 Gratis • 5 Pro</span>
+          </div>
+          <div id="maqamSelectorGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Key / Root Selector -->
+        <div class="lg:col-span-4 bg-brand-card border border-brand-border rounded-2xl p-4 flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-3">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">2. Nada Dasar (Qarar)</label>
+            <span id="rootHzDisplay" class="text-xs font-mono text-amber-400">D3 • 146.8 Hz</span>
+          </div>
+          <div class="grid grid-cols-5 gap-1.5" id="keySelectorGrid">
+            <!-- Populated by JS -->
+          </div>
+          <p class="text-[11px] text-slate-400 mt-2.5">Tip: Pria umumnya nyaman di <b>D</b> atau <b>E</b>, Wanita di <b>G</b> atau <b>A</b>.</p>
+        </div>
+      </div>
+
+      <!-- AUDIO REFERENCE & SAMPLE PLAYER -->
+      <div class="bg-brand-card border border-brand-border rounded-2xl p-5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-brand-border">
+          <div>
+            <div class="flex items-center gap-2.5">
+              <h2 id="activeMaqamTitle" class="text-xl font-extrabold text-white">Maqam Bayati</h2>
+              <span id="activeMaqamArabic" class="arabic-text text-xl text-amber-400 font-bold">مَقَام بَيَاتِي</span>
+            </div>
+            <p id="activeMaqamDesc" class="text-xs sm:text-sm text-slate-300 mt-1">
+              Karakter sendu, syahdu, dan lembut. Memiliki nada seperempat (half-flat) pada derajat ke-2.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-1.5" id="scaleNotesBadges">
+            <!-- Scale degrees badges -->
+          </div>
+        </div>
+
+        <!-- 3 SAMPLE AUDIO BUTTONS -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
+          <!-- Button 1: Drone -->
+          <button id="btnDrone" onclick="toggleDrone()" class="flex items-center justify-between p-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 transition text-left group">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center font-bold group-hover:scale-105 transition">
+                〰️
+              </div>
+              <div>
+                <div class="text-xs font-bold text-white flex items-center gap-1.5">
+                  Nada Dasar (Drone)
+                  <span id="droneStatusDot" class="hidden w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                </div>
+                <div class="text-[11px] text-slate-400">Pengiring Qarar + 5th konstan</div>
+              </div>
+            </div>
+            <span id="droneActionLabel" class="text-[11px] font-bold px-2.5 py-1 rounded bg-slate-800 text-emerald-400">Putar</span>
+          </button>
+
+          <!-- Button 2: Sullam -->
+          <button onclick="playSullam()" class="flex items-center justify-between p-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 transition text-left group">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-lg bg-sky-500/15 text-sky-400 flex items-center justify-center font-bold group-hover:scale-105 transition">
+                🎹
+              </div>
+              <div>
+                <div class="text-xs font-bold text-white">Tangga Nada (Sullam)</div>
+                <div class="text-[11px] text-slate-400">Dengar interval naik & turun</div>
+              </div>
+            </div>
+            <span class="text-[11px] font-bold px-2.5 py-1 rounded bg-slate-800 text-sky-400">Dengar</span>
+          </button>
+
+          <!-- Button 3: Miftah Phrase (Nay Arab / Arabic Strings) -->
+          <div class="p-3 rounded-xl bg-gradient-to-r from-amber-500/10 to-emerald-500/10 border border-amber-500/40 flex flex-col justify-between gap-2">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+                  🎶
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-amber-300">Sample Frasa Miftah</div>
+                  <div id="miftahSubtitle" class="text-[10px] text-slate-300">Cengkok legato Timur Tengah</div>
+                </div>
+              </div>
+              <button onclick="playMiftahSample()" class="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 transition shadow">
+                ▶ Putar
+              </button>
+            </div>
+            <!-- Pilihan Instrumen Petik Arab (Qanun / Oud) -->
+            <div class="flex items-center gap-1.5 pt-1 border-t border-amber-500/20">
+              <span class="text-[10px] text-slate-400 mr-1">Instrumen:</span>
+              <button id="inst-qanun" onclick="setMiftahInstrument('qanun')" class="flex-1 py-1 rounded text-[10px] font-bold bg-amber-500/25 text-amber-300 border border-amber-500/50 transition">
+                🪕 Qanun
+              </button>
+              <button id="inst-oud" onclick="setMiftahInstrument('oud')" class="flex-1 py-1 rounded text-[10px] font-bold bg-slate-900/80 text-slate-400 border border-slate-700 hover:text-slate-200 transition">
+                🎸 Oud (Gambus)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden HTML5 Audio Player for Real Munsyid MP3 Recordings -->
+        <audio id="munsyidAudioPlayer" class="hidden"></audio>
+      </div>
+
+      <!-- REAL-TIME PITCH VISUALIZER ENGINE -->
+      <div class="bg-brand-card border border-brand-border rounded-2xl p-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              Detektor Pitch Vokal Real-Time
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Microtonal Ready</span>
+            </h3>
+            <p class="text-xs text-slate-400">Nyalakan mikrofon lalu bersenandung mengikuti garis target maqam di layar.</p>
+          </div>
+
+          <button id="btnMicToggle" onclick="toggleMicrophone()" class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-950/50 transition">
+            <span>🎙️</span>
+            <span id="micBtnText">Mulai Deteksi Suara</span>
+          </button>
+        </div>
+
+        <!-- LIVE METER BAR -->
+        <div class="grid grid-cols-3 gap-3 mb-4">
+          <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-center">
+            <div class="text-[10px] uppercase tracking-wider text-slate-400">Derajat Maqam</div>
+            <div id="liveDegreeName" class="text-base sm:text-lg font-extrabold text-emerald-400 mt-0.5">—</div>
+          </div>
+          <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-center">
+            <div class="text-[10px] uppercase tracking-wider text-slate-400">Akurasi (Cents)</div>
+            <div id="liveCentsDiff" class="text-base sm:text-lg font-extrabold text-white mt-0.5">—</div>
+          </div>
+          <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-center">
+            <div class="text-[10px] uppercase tracking-wider text-slate-400">Frekuensi</div>
+            <div id="liveFreqHz" class="text-base sm:text-lg font-mono font-bold text-slate-300 mt-0.5">0 Hz</div>
+          </div>
+        </div>
+
+        <!-- CANVAS VISUALIZER -->
+        <div class="relative rounded-xl overflow-hidden border border-slate-800 bg-[#050B0D]">
+          <canvas id="pitchCanvas" class="w-full h-64 sm:h-72 block"></canvas>
+          <div id="canvasOverlayHint" class="absolute inset-0 flex flex-col items-center justify-center bg-[#050B0D]/75 backdrop-blur-[2px] text-center p-4">
+            <p class="text-sm font-semibold text-slate-200">Mikrofon Belum Aktif</p>
+            <p class="text-xs text-slate-400 max-w-md mt-1">Klik <b>"Mulai Deteksi Suara"</b> di kanan atas untuk melihat posisi cengkok suara Anda secara langsung di atas garis maqam.</p>
+          </div>
+        </div>
+
+        <!-- VOCAL COACH FEEDBACK BOX -->
+        <div class="mt-4 p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start gap-3">
+          <span class="text-lg">💡</span>
+          <div class="text-xs text-slate-300 leading-relaxed">
+            <strong class="text-emerald-400">Catatan Munsyid:</strong> Garis berwarna <span class="text-amber-400 font-semibold">emas putus-putus (½♭)</span> menandakan nada seperempat (<i>quarter-tone</i>) khas Arab. Jangan ditekan setinggi nada pop Barat agar nuansa maqam tetap terasa syahdu.
+          </div>
+        </div>
+      </div>
+
+      <!-- INBOUND SERVICE BANNER (SYAMS DIGITAL) -->
+      <div class="rounded-2xl bg-gradient-to-r from-emerald-950/80 via-brand-card to-amber-950/40 border border-emerald-500/30 p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Layanan Eksklusif Syams Digital</span>
+          <h4 class="text-base font-bold text-white mt-0.5">Butuh Guide Vokal / Aransemen Hadrah & Banjari Custom?</h4>
+          <p class="text-xs text-slate-300 mt-1 max-w-2xl">
+            Pesan rekaman <i>guide</i> suara 1, suara 2 (pecah suara), dan tempo ketukan untuk lomba, konten YouTube/TikTok, atau single shalawat grup Anda.
+          </p>
+        </div>
+        <a href="https://wa.me/6281234567890?text=Assalamualaikum%20Syams%20Digital,%20saya%20tertarik%20pesan%20jasa%20guide%20vokal%20/%20aransemen%20hadrah" target="_blank" class="shrink-0 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition shadow-md">
+          Konsultasi via WhatsApp →
+        </a>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: AI DETEKSI MAQAM LAGU ==================== -->
+    <section id="view-detector" class="hidden space-y-5">
+      <div class="bg-brand-card border border-brand-border rounded-2xl p-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-brand-border">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold uppercase tracking-wider mb-1.5">
+              24-Bin Quarter-Tone Histogram + Jins Scoring Engine
+            </div>
+            <h2 class="text-xl font-extrabold text-white">Detektor Maqam Otomatis ("Maqam Apa Shalawat Ini?")</h2>
+            <p class="text-xs text-slate-400 mt-1">
+              Senandungkan bait shalawat (minimal 8 detik) atau unggah file audio vokal/melodi untuk menganalisis tangga nada maqamnya secara matematis.
+            </p>
+          </div>
+        </div>
+
+        <!-- 2 MODE INPUT: REKAM LANGSUNG ATAU UPLOAD FILE AUDIO -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
+          <!-- Mode A: Rekam Vokal / Senandung -->
+          <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <span>🎙️</span> Cara 1: Senandungkan Shalawat
+              </h3>
+              <p class="text-xs text-slate-400 mt-1">
+                Nyanyikan 1–2 baris bait shalawat secara jelas, lalu <b>akhiri di nada dasar (Qarar)</b> agar sistem mengunci titik nol dengan presisi tinggi.
+              </p>
+            </div>
+
+            <div class="mt-4">
+              <div class="flex items-center justify-between text-xs mb-2">
+                <span id="recStatusText" class="text-slate-400">Siap merekam...</span>
+                <span id="recTimerText" class="font-mono font-bold text-amber-400">00:00</span>
+              </div>
+              <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden mb-3">
+                <div id="recProgressBar" class="h-full bg-emerald-500 w-0 transition-all duration-200"></div>
+              </div>
+              <button id="btnAnalyzeMic" onclick="toggleMaqamScanMic()" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs transition shadow-lg">
+                ● Mulai Rekam & Analisis (10 Detik)
+              </button>
+            </div>
+          </div>
+
+          <!-- Mode B: Upload File Audio -->
+          <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <span>📂</span> Cara 2: Unggah Audio MP3 / WAV
+              </h3>
+              <p class="text-xs text-slate-400 mt-1">
+                Pilih potongan rekaman vokal atau instrumen melodi tunggal (durasi 5–18 detik pertama akan dipindai otomatis).
+              </p>
+            </div>
+
+            <div class="mt-4">
+              <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-slate-700 hover:border-amber-400/60 rounded-xl cursor-pointer bg-slate-950/60 transition">
+                <span class="text-xs font-semibold text-slate-300">Klik untuk pilih file MP3 / WAV</span>
+                <span class="text-[10px] text-slate-500 mt-0.5">Paling akurat untuk vokal acapella / solo</span>
+                <input type="file" accept="audio/*" onchange="analyzeUploadedAudio(event)" class="hidden" />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- HASIL ANALISIS AI & DSP -->
+        <div id="detectorResultBox" class="hidden mt-6 p-5 rounded-2xl bg-gradient-to-br from-slate-900 via-[#0B191E] to-emerald-950/30 border border-emerald-500/40">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-400">Hasil Identifikasi Maqam</span>
+              <div class="flex items-baseline gap-3 mt-1">
+                <h3 id="resPrimaryMaqam" class="text-2xl font-extrabold text-white">Maqam Bayati</h3>
+                <span id="resConfidenceBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Kecocokan 92%</span>
+              </div>
+              <p id="resDetectedRoot" class="text-xs text-amber-400 font-mono mt-1">Nada Tumpuan Dasar (Qarar): D</p>
+            </div>
+            <button id="btnJumpDetected" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shrink-0">
+              Latih Maqam Ini di Studio →
+            </button>
+          </div>
+
+          <!-- PERINGKAT KEMIRIPAN 5 MAQAM -->
+          <div class="mt-4">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Skor Kecocokan Tangga Nada (Jins & Interval):</h4>
+            <div id="resScoreBars" class="space-y-2">
+              <!-- Diisi oleh JS -->
+            </div>
+          </div>
+
+          <!-- PENJELASAN ANALISIS MUSIKAL -->
+          <div class="mt-4 p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 leading-relaxed">
+            <strong class="text-amber-400">Analisis Struktur Nada:</strong> <span id="resExplanation"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: KAMUS NADA QASIDAH ==================== -->
+    <section id="view-kamus" class="hidden space-y-5">
+      <div class="bg-brand-card border border-brand-border rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-extrabold text-white">Kamus Nada & Melodi Qasidah Pilihan</h2>
+          <p class="text-xs text-slate-400">Klik <b>Putar Shalawat</b> untuk mendengar notasi melodi bait aslinya dengan suara <span class="text-amber-400 font-semibold" id="kamusInstIndicator">Nay Arab</span>.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="flex items-center bg-slate-900 border border-slate-700 rounded-xl p-1 text-[11px]">
+            <button id="kamus-inst-qanun" onclick="setMiftahInstrument('qanun')" class="px-2.5 py-1 rounded-lg font-bold bg-amber-500 text-slate-950 transition">🪕 Qanun</button>
+            <button id="kamus-inst-oud" onclick="setMiftahInstrument('oud')" class="px-2.5 py-1 rounded-lg font-bold text-slate-400 hover:text-white transition">🎸 Oud</button>
+          </div>
+          <input id="searchQasidah" oninput="renderQasidahList()" type="text" placeholder="Cari judul shalawat..." class="bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 w-full sm:w-52">
+        </div>
+      </div>
+
+      <div id="qasidahGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: MODUL E-BOOK MUNSYID ==================== -->
+    <section id="view-ebook" class="hidden space-y-5">
+      <div class="bg-brand-card border border-brand-border rounded-2xl p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-brand-border">
+          <div>
+            <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Panduan Praktis Vokal Hadrah & Tilawah</span>
+            <h2 class="text-2xl font-extrabold text-white mt-1">Rahasia Nagham & Vokal Hadrah</h2>
+            <p class="text-xs text-slate-400 mt-1">Disusun oleh Mohamad Samsul Hadi • Syams Digital</p>
+          </div>
+          <button id="btnUnlockEbookInline" onclick="openUpgradeModal()" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition">
+            👑 Buka Seluruh Bab (Mode Pro)
+          </button>
+        </div>
+
+        <div class="mt-6 space-y-6 text-sm text-slate-300 leading-relaxed">
+          <!-- BAB 1 (FREE PREVIEW) -->
+          <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+            <h3 class="text-base font-bold text-emerald-400 mb-2">BAB 1: Mengapa Vokal Hadrah Sering Terdengar Datar atau Fals?</h3>
+            <p class="mb-2">Banyak vokalis memiliki suara merdu, tetapi saat membawakan qasidah atau <i>Mahallul Qiyam</i>, lagu terasa sumbang di nada tinggi. Penyebab utamanya ada tiga:</p>
+            <ul class="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-slate-300">
+              <li><b>Menyanyikan Maqam Arab dengan Tangga Nada Barat:</b> Maqam seperti <i>Bayati</i> dan <i>Rast</i> memiliki nada <b>Sikah (½♭)</b> yang jatuh tepat di tengah-tengah tuts piano.</li>
+              <li><b>Salah Memilih Wilayah Suara (Qarar – Nawa – Jawab):</b> Masuk terlalu tinggi di bait pertama membuat napas habis sebelum masuk bagian reff.</li>
+              <li><b>Transisi Antar-Maqam Tanpa Jembatan:</b> Pindah dari Bayati ke Hijaz tanpa menyamakan nada tumpuan membuat pemain darbuka dan vokal latar kehilangan patokan.</li>
+            </ul>
+          </div>
+
+          <!-- BAB 2 - 4 (PRO LOCKED CONTENT) -->
+          <div id="ebookProContent" class="relative">
+            <div id="ebookBlurOverlay" class="absolute inset-0 z-10 bg-gradient-to-b from-brand-card/60 via-brand-card/95 to-brand-card flex flex-col items-center justify-center text-center p-6 rounded-xl border border-amber-500/30">
+              <span class="text-3xl mb-2">🔒</span>
+              <h4 class="text-base font-bold text-white">Bab 2, 3, & 4 Khusus Member Munsyid Pro</h4>
+              <p class="text-xs text-slate-400 max-w-md mt-1 mb-4">
+                Pelajari rumus pindah maqam anti-fals di panggung, bedah cengkok 5 maqam utama, dan checklist pemanasan vokal 5 menit sebelum tampil.
+              </p>
+              <button onclick="openUpgradeModal()" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-lg">
+                Aktifkan Paket Pro Sekarang
+              </button>
+            </div>
+
+            <div class="space-y-4 p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div>
+                <h3 class="text-base font-bold text-amber-400 mb-1">BAB 2: Bedah 5 Maqam Wajib Vokalis Hadrah</h3>
+                <p class="text-xs text-slate-300">1. <b>Bayati</b> (pembuka syahdu, ayunkan nada ke-3 ke nada ke-2 half-flat). 2. <b>Hijaz</b> (dramatis, loncatan 1½ nada tegas di derajat ke-2 ke ke-3). 3. <b>Rast</b> (gagah, dua nada half-flat di derajat ke-3 & ke-7). 4. <b>Nahawand</b> (minor harmonis modern, cocok untuk qasidah kontemporer). 5. <b>Sika</b> (dimulai langsung dari nada half-flat).</p>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-amber-400 mb-1">BAB 3: Rumus 3 Babak Pindah Maqam di Panggung</h3>
+                <p class="text-xs text-slate-300"><b>Babak 1:</b> Mulai dengan Bayati Qarar (nada dasar D/E). <b>Babak 2:</b> Saat ketukan naik ke reff, lompat ke Hijaz atau Rast di wilayah Jawab (oktaf atas). <b>Babak 3:</b> Turun kembali ke Bayati Qarar pada bait penutup untuk mengunci suasana khusyuk.</p>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-amber-400 mb-1">BAB 4: Checklist Pemanasan Vokal 5 Menit Sebelum Tampil</h3>
+                <p class="text-xs text-slate-300">1 Menit Lip Trills mengikuti tangga nada Bayati → 1 Menit Humming untuk resonansi depan → 1 Menit Cek Qarar menggunakan Drone MaqamLab → 2 Menit latihan melisma Hijaz tempo lambat.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-brand-border bg-[#050B0D] py-5 px-4 mt-10">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400">
+      <div>© 2026 <span class="text-emerald-400 font-bold">Syams Digital</span> (syamsdigital.my.id) • MaqamLab v1.2</div>
+      <div>Dikembangkan untuk Munsyid, Muadzin & Pecinta Shalawat Nusantara</div>
+    </div>
+  </footer>
+
+  <!-- ==================== MODAL UPGRADE & AKTIVASI PRO ==================== -->
+  <div id="upgradeModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-brand-card border border-amber-500/40 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative my-8">
+      <button onclick="closeUpgradeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">✕</button>
+      
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-[11px] font-bold mb-3">
+        👑 UPGRADE MUNSYID PRO
+      </div>
+      <h3 class="text-xl font-extrabold text-white">Kuasai Semua Maqamat & Cengkok Hadrah</h3>
+      <p class="text-xs text-slate-300 mt-1">Sekali bayar untuk akses selamanya (Lifetime). Tanpa biaya langganan bulanan.</p>
+
+      <!-- VALUE LIST -->
+      <div class="mt-4 space-y-2.5 bg-slate-900/90 border border-slate-800 rounded-xl p-4 text-xs">
+        <div class="flex items-center gap-2.5 text-slate-200">
+          <span class="text-emerald-400 font-bold">✓</span> Buka penuh <b>Maqam Hijaz, Rast, & Sika</b> + Detektor Mikrotonal
+        </div>
+        <div class="flex items-center gap-2.5 text-slate-200">
+          <span class="text-emerald-400 font-bold">✓</span> Akses penuh <b>Sample Frasa Miftah (Nay & Strings) + Cengkok Munsyid</b>
+        </div>
+        <div class="flex items-center gap-2.5 text-slate-200">
+          <span class="text-emerald-400 font-bold">✓</span> Buka penuh <b>E-Book Panduan Praktis Maqamat & Rumus Panggung</b>
+        </div>
+        <div class="flex items-center gap-2.5 text-slate-200">
+          <span class="text-emerald-400 font-bold">✓</span> Gratis update lirik & qasidah baru setiap bulan
+        </div>
+      </div>
+
+      <!-- PRICING CARDS -->
+      <div class="grid grid-cols-2 gap-3 mt-4">
+        <div class="p-3.5 rounded-xl bg-slate-900 border border-amber-500/50">
+          <div class="text-[11px] font-bold text-amber-400">Personal Munsyid</div>
+          <div class="text-lg font-extrabold text-white mt-0.5">Rp49.000</div>
+          <div class="text-[10px] text-slate-400">1 Akun • Akses Selamanya</div>
+        </div>
+        <div class="p-3.5 rounded-xl bg-slate-900 border border-emerald-500/40">
+          <div class="text-[11px] font-bold text-emerald-400">Paket Grup Hadrah</div>
+          <div class="text-lg font-extrabold text-white mt-0.5">Rp149.000</div>
+          <div class="text-[10px] text-slate-400">10 Anggota + Bonus 1 Guide MP3</div>
+        </div>
+      </div>
+
+      <!-- ORDER CTA -->
+      <a href="https://wa.me/6281234567890?text=Assalamualaikum%20Syams%20Digital,%20saya%20mau%20aktivasi%20MaqamLab%20Munsyid%20Pro" target="_blank" class="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs shadow-lg transition">
+        Beli Kode Aktivasi via WhatsApp / QRIS →
+      </a>
+
+      <!-- ACTIVATION CODE INPUT -->
+      <div class="mt-5 pt-4 border-t border-slate-800">
+        <label class="block text-[11px] font-semibold text-slate-400 mb-1.5">Sudah punya kode aktivasi? Masukkan di sini:</label>
+        <div class="flex gap-2">
+          <input id="activationCodeInput" type="text" placeholder="Contoh: SYAMS2026" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white uppercase tracking-wider focus:outline-none focus:border-emerald-500">
+          <button onclick="verifyActivationCode()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition">
+            Aktifkan
+          </button>
+        </div>
+        <p id="activationFeedback" class="text-[11px] mt-1.5 hidden"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT AUDIO & APP ENGINE ==================== -->
+  <script>
+    // 1. DATABASE 8 MAQAMAT UTAMA HADRAH & TILAWAH (Interval dalam Cents dari Qarar = 0)
+    const MAQAM_DATA = {
+      bayati: {
+        id: 'bayati',
+        name: 'Bayati',
+        arabic: 'بَيَاتِي',
+        isPro: false,
+        desc: 'Karakter sendu, syahdu, dan lembut. Nada ke-2 turun seperempat nada (half-flat / 150 cents). Paling sering dipakai membuka Mahallul Qiyam & Adzan.',
+        intervals: [0, 150, 300, 500, 700, 800, 1000, 1200],
+        labels: ['Qarar (1)', 'Sikah 2 (½♭)', '3♭', 'Nawa (4)', 'Husaini (5)', '6♭', '7♭', 'Jawab (8)'],
+        miftahPattern: [
+          { deg: 0, dur: 0.40 }, { deg: 2, dur: 0.35 }, { deg: 3, dur: 0.55 },
+          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.45 }, { deg: 0, dur: 0.90 }
+        ],
+        audioUrl: ''
+      },
+      nahawand: {
+        id: 'nahawand',
+        name: 'Nahawand',
+        arabic: 'نَهَاوَنْد',
+        isPro: false,
+        desc: 'Karakter romantis, sedih elegan, dan menyentuh. Mirip tangga nada Minor Harmonis Barat sehingga mudah dipadukan dengan musik modern.',
+        intervals: [0, 200, 300, 500, 700, 800, 1100, 1200],
+        labels: ['Qarar (1)', '2', '3♭', 'Nawa (4)', '5', '6♭', '7♮', 'Jawab (8)'],
+        miftahPattern: [
+          { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.30 }, { deg: 2, dur: 0.40 }, { deg: 4, dur: 0.60 },
+          { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.85 }
+        ],
+        audioUrl: ''
+      },
+      kurdi: {
+        id: 'kurdi',
+        name: 'Kurdi',
+        arabic: 'كُرْدِي',
+        isPro: false,
+        desc: 'Sangat populer di nasyid & shalawat kontemporer (seperti Deen Assalam). Derajat ke-2 turun setengah nada penuh (100 cents) tanpa quarter-tone.',
+        intervals: [0, 100, 300, 500, 700, 800, 1000, 1200],
+        labels: ['Qarar (1)', '2♭', '3♭', 'Nawa (4)', '5', '6♭', '7♭', 'Jawab (8)'],
+        miftahPattern: [
+          { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.45 }, { deg: 3, dur: 0.55 },
+          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.85 }
+        ],
+        audioUrl: ''
+      },
+      hijaz: {
+        id: 'hijaz',
+        name: 'Hijaz',
+        arabic: 'حِجَاز',
+        isPro: true,
+        desc: 'Karakter dramatis, magis, dan penuh kerinduan. Ciri khasnya adalah loncatan lebar 1½ nada (300 cents) antara derajat ke-2 dan ke-3.',
+        intervals: [0, 100, 400, 500, 700, 800, 1000, 1200],
+        labels: ['Qarar (1)', '2♭', '3♮ (Lompat)', 'Nawa (4)', '5', '6♭', '7♭', 'Jawab (8)'],
+        miftahPattern: [
+          { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.55 }, { deg: 3, dur: 0.60 },
+          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.90 }
+        ],
+        audioUrl: ''
+      },
+      shoba: {
+        id: 'shoba',
+        name: 'Shoba',
+        arabic: 'صَبَا',
+        isPro: true,
+        desc: 'Karakter paling menyayat hati, haru mendalam, dan memohon. Ciri mutlaknya ada pada nada ke-2 half-flat (150c) dan nada ke-4 yang turun (400c).',
+        intervals: [0, 150, 300, 400, 700, 800, 1000, 1200],
+        labels: ['Qarar (1)', '2 (½♭)', '3♭', '4♭ (Khas Shoba)', '5', '6♭', '7♭', 'Jawab (8)'],
+        miftahPattern: [
+          { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 3, dur: 0.60 },
+          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.45 }, { deg: 0, dur: 0.90 }
+        ],
+        audioUrl: ''
+      },
+      rast: {
+        id: 'rast',
+        name: 'Rast',
+        arabic: 'رَاسْت',
+        isPro: true,
+        desc: 'Karakter gagah, tegas, dan berwibawa. Memiliki dua nada seperempat nada (half-flat) pada derajat ke-3 (350 cents) dan ke-7 (1050 cents).',
+        intervals: [0, 200, 350, 500, 700, 900, 1050, 1200],
+        labels: ['Qarar (1)', '2', 'Sikah 3 (½♭)', 'Nawa (4)', '5', '6', 'Awj 7 (½♭)', 'Jawab (8)'],
+        miftahPattern: [
+          { deg: 0, dur: 0.40 }, { deg: 1, dur: 0.30 }, { deg: 2, dur: 0.45 }, { deg: 4, dur: 0.60 },
+          { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 0, dur: 0.85 }
+        ],
+        audioUrl: ''
+      },
+      ajam: {
+        id: 'ajam',
+        name: '\'Ajam / Jiharkah',
+        arabic: 'عَجَم / جِهَارْكَاه',
+        isPro: true,
+        desc: 'Karakter cerah, optimis, megah, dan penuh sukacita. Sangat serasi untuk qasidah bertempo semangat dan perayaan besar.',
+        intervals: [0, 200, 400, 500, 700, 900, 1100, 1200],
+        labels: ['Qarar (1)', '2', '3♮ (Cerah)', 'Nawa (4)', '5', '6', '7♮', 'Jawab (8)'],
+        miftahPattern: [
+          { deg: 0, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 4, dur: 0.55 },
+          { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.85 }
+        ],
+        audioUrl: ''
+      },
+      sika: {
+        id: 'sika',
+        name: 'Sika',
+        arabic: 'سِيكَاه',
+        isPro: true,
+        desc: 'Karakter sangat khas Timur Tengah dan mendayu. Nada dasarnya sendiri merupakan pijakan half-flat yang unik.',
+        intervals: [0, 150, 350, 500, 700, 850, 1050, 1200],
+        labels: ['Qarar Sikah', '2', '3 (½♭)', '4', '5', '6 (½♭)', '7 (½♭)', 'Jawab (8)'],
+        miftahPattern: [
+          { deg: 0, dur: 0.45 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.50 },
+          { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.85 }
+        ],
+        audioUrl: ''
+      }
+    };
+
+    // 2. NADA DASAR (QARAR)
+    const ROOT_KEYS = [
+      { label: 'C3', hz: 130.81 },
+      { label: 'D3', hz: 146.83 },
+      { label: 'E3', hz: 164.81 },
+      { label: 'F3', hz: 174.61 },
+      { label: 'G3', hz: 196.00 }
+    ];
+
+    // 3. DATABASE 11 QASIDAH DENGAN NOTASI MELODI RIIL LAGU ASLI
+    const QASIDAH_LIST = [
+      {
+        title: 'Mahallul Qiyam (Ya Nabi Salam \'Alaika)',
+        primaryMaqam: 'bayati',
+        secondaryMaqam: 'hijaz',
+        keyIndex: 1, // D3
+        rhythm: 'Zafin / Banjari',
+        arabic: 'يَا نَبِي سَلَامْ عَلَيْكَ • يَا رَسُوْل سَلَامْ عَلَيْكَ',
+        latin: 'Ya Nabi salam \'alaika • Ya Rasul salam \'alaika',
+        note: 'Buka dengan Bayati Qarar yang tenang. Masuk bait "Asyroqol Badru" naik ke Hijaz Jawab.',
+        melody: [
+          { deg: 0, dur: 0.45 }, { deg: 2, dur: 0.45 }, { deg: 3, dur: 0.65 }, { deg: 3, dur: 0.35 },
+          { deg: 3, dur: 0.40 }, { deg: 4, dur: 0.45 }, { deg: 3, dur: 0.40 }, { deg: 2, dur: 0.65 },
+          { deg: 2, dur: 0.40 }, { deg: 1, dur: 0.40 }, { deg: 2, dur: 0.40 }, { deg: 3, dur: 0.55 },
+          { deg: 2, dur: 0.40 }, { deg: 1, dur: 0.45 }, { deg: 0, dur: 0.90 }
+        ],
+        audioUrl: ''
+      },
+      {
+        title: 'Ya Asyiqol Musthofa',
+        primaryMaqam: 'nahawand',
+        secondaryMaqam: 'hijaz',
+        keyIndex: 1, // D3
+        rhythm: 'Zafin Modern',
+        arabic: 'يَا عَاشِقَ الْمُصْطَفَى أَبْشِرْ بِنَيْلِ الْمُنَى',
+        latin: 'Ya \'asyiqol Musthofa, absyir binailil muna',
+        note: 'Sangat nyaman di Nahawand. Bagian reff bisa diberi sentuhan Hijaz agar lebih menyentuh.',
+        melody: [
+          { deg: 0, dur: 0.45 }, { deg: 2, dur: 0.35 }, { deg: 4, dur: 0.55 }, { deg: 4, dur: 0.35 },
+          { deg: 5, dur: 0.45 }, { deg: 4, dur: 0.40 }, { deg: 3, dur: 0.65 },
+          { deg: 2, dur: 0.40 }, { deg: 3, dur: 0.35 }, { deg: 4, dur: 0.45 }, { deg: 3, dur: 0.35 },
+          { deg: 2, dur: 0.40 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.85 }
+        ],
+        audioUrl: ''
+      },
+      {
+        title: 'Deen Assalam (Kullul Qulub)',
+        primaryMaqam: 'kurdi',
+        secondaryMaqam: 'nahawand',
+        keyIndex: 1, // D3
+        rhythm: 'Nasyid / Hadrah Modern',
+        arabic: 'كُلُّ الْقُلُوْبِ إِلَى الْحَبِيْبِ تَمِيْلُ',
+        latin: 'Kullul qulubi ilal habibi tamilu',
+        note: 'Contoh paling jelas untuk Maqam Kurdi. Perhatikan nada ke-2 rendah (100 cents) sejak suku kata pertama.',
+        melody: [
+          { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.45 }, { deg: 3, dur: 0.55 },
+          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 0, dur: 0.80 }
+        ],
+        audioUrl: ''
+      },
+      {
+        title: 'Thola\'al Badru \'Alayna',
+        primaryMaqam: 'hijaz',
+        secondaryMaqam: 'bayati',
+        keyIndex: 2, // E3
+        rhythm: 'Habsyi / Rebana Klasik',
+        arabic: 'طَلَعَ الْبَدْرُ عَلَيْنَا • مِنْ ثَنِيَّاتِ الْوَدَاعِ',
+        latin: 'Thola\'al badru \'alayna • Min tsaniyyatil wada\'',
+        note: 'Perhatikan loncatan nada ke-2 ke ke-3 khas Hijaz pada kata "Al-Badru".',
+        melody: [
+          { deg: 0, dur: 0.40 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.45 }, { deg: 3, dur: 0.55 },
+          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 0, dur: 0.65 },
+          { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.45 }, { deg: 3, dur: 0.50 },
+          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.85 }
+        ],
+        audioUrl: ''
+      },
+      {
+        title: 'Ya Robbana\'tarofna (Munajat)',
+        primaryMaqam: 'shoba',
+        secondaryMaqam: 'bayati',
+        keyIndex: 1, // D3
+        rhythm: 'Munajat / Doa Penutup',
+        arabic: 'يَا رَبَّنَا اعْتَرَفْنَا • بِأَنَّنَا اقْتَرَفْنَا',
+        latin: 'Ya robbana\'tarofna • Bi annanaqtarofna',
+        note: 'Maqam Shoba sangat kuat membangkitkan rasa haru dan taubat saat bagian doa penutup majelis.',
+        melody: [
+          { deg: 0, dur: 0.40 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 3, dur: 0.60 },
+          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.85 }
+        ],
+        audioUrl: ''
+      },
+      {
+        title: 'Qod Kafani \'Ilmu Robbi',
+        primaryMaqam: 'rast',
+        secondaryMaqam: 'bayati',
+        keyIndex: 0, // C3
+        rhythm: 'Habsyi Gagah',
+        arabic: 'قَدْ كَفَانِي عِلْمُ رَبِّي • مِنْ سُؤَالِي وَاخْتِيَارِي',
+        latin: 'Qod kafani \'ilmu robbi • Min su-ali wakhtiyari',
+        note: 'Gunakan karakter Rast yang gagah dan tegas pada ketukan awal.',
+        melody: [
+          { deg: 0, dur: 0.40 }, { deg: 2, dur: 0.40 }, { deg: 4, dur: 0.55 }, { deg: 4, dur: 0.35 },
+          { deg: 5, dur: 0.40 }, { deg: 4, dur: 0.35 }, { deg: 3, dur: 0.40 }, { deg: 2, dur: 0.60 },
+          { deg: 2, dur: 0.35 }, { deg: 3, dur: 0.35 }, { deg: 4, dur: 0.45 }, { deg: 3, dur: 0.35 },
+          { deg: 2, dur: 0.40 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.85 }
+        ],
+        audioUrl: ''
+      },
+      {
+        title: 'Wulidal Musyarrof (Maulid Simtudduror)',
+        primaryMaqam: 'ajam',
+        secondaryMaqam: 'rast',
+        keyIndex: 0, // C3
+        rhythm: 'Habsyi Meriah',
+        arabic: 'وُلِدَ الْمُشَرَّفُ فِي رَبِيْعِ الْأَوَّلِ',
+        latin: 'Wulidal musyarrofu fi robi\'il awwali',
+        note: 'Nuansa \'Ajam / Jiharkah yang cerah dan penuh sukacita menyambut kelahiran Nabi.',
+        melody: [
+          { deg: 0, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 4, dur: 0.50 }, { deg: 4, dur: 0.35 },
+          { deg: 5, dur: 0.40 }, { deg: 4, dur: 0.35 }, { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 0, dur: 0.80 }
+        ],
+        audioUrl: ''
+      },
+      {
+        title: 'Ya Hanana (Zhoharoddinul Mu\'ayyad)',
+        primaryMaqam: 'sika',
+        secondaryMaqam: 'rast',
+        keyIndex: 2, // E3
+        rhythm: 'Banjari Cepat',
+        arabic: 'ظَهَرَ الدِّينُ الْمُؤَيَّدْ • بِظُهُورِ النَّبِي أَحْمَدْ',
+        latin: 'Zhoharoddinul mu-ayyad • Bizhuhurin-nabi Ahmad',
+        note: 'Pijakan nada Sika memberikan nuansa gembira khas Timur Tengah.',
+        melody: [
+          { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.45 }, { deg: 2, dur: 0.35 },
+          { deg: 3, dur: 0.40 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.55 },
+          { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 3, dur: 0.45 },
+          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.80 }
+        ],
+        audioUrl: ''
+      },
+      {
+        title: 'Busyrolana',
+        primaryMaqam: 'nahawand',
+        secondaryMaqam: 'bayati',
+        keyIndex: 1, // D3
+        rhythm: 'Pop Religi / Hadrah',
+        arabic: 'بُشْرَى لَنَا نِلْنَا الْمُنَى • زَالَ الْعَنَا وَافَى الْهَنَا',
+        latin: 'Busyrolana nilnal muna • Zalal \'ana wafal hana',
+        note: 'Tangga nada Nahawand membuat perpindahan suara 1 dan suara 2 sangat harmonis.',
+        melody: [
+          { deg: 4, dur: 0.40 }, { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 4, dur: 0.55 },
+          { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.60 },
+          { deg: 2, dur: 0.35 }, { deg: 3, dur: 0.35 }, { deg: 4, dur: 0.50 }, { deg: 3, dur: 0.35 },
+          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.85 }
+        ],
+        audioUrl: ''
+      },
+      {
+        title: 'Roqqot \'Aina (Assalamu \'Alayka)',
+        primaryMaqam: 'hijaz',
+        secondaryMaqam: 'nahawand',
+        keyIndex: 1, // D3
+        rhythm: 'Ballad / Akapela',
+        arabic: 'رَقَّتْ عَيْنَايَ شَوْقًا • وَلِطَيْبَةَ ذَرَفَتْ عِشْقًا',
+        latin: 'Roqqot \'ainaya syauqon • Wa li Thoibata dzarofat \'isyqon',
+        note: 'Jaga artikulasi lembut di nada rendah sebelum naik ke puncak reff Assalamu \'Alayka.',
+        melody: [
+          { deg: 0, dur: 0.40 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.45 }, { deg: 2, dur: 0.35 },
+          { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 3, dur: 0.65 },
+          { deg: 3, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 },
+          { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.40 }, { deg: 0, dur: 0.85 }
+        ],
+        audioUrl: ''
+      },
+      {
+        title: 'Sholawat Jibril (Shollallahu \'Ala Muhammad)',
+        primaryMaqam: 'bayati',
+        secondaryMaqam: 'rast',
+        keyIndex: 2, // E3
+        rhythm: 'Bebas / Pembuka Majelis',
+        arabic: 'صَلَّى اللهُ عَلَى مُحَمَّد • صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ',
+        latin: 'Shollallahu \'ala Muhammad • Shollallahu \'alaihi wasallam',
+        note: 'Latihan terbaik untuk menguji kestabilan nada ke-2 half-flat Bayati.',
+        melody: [
+          { deg: 0, dur: 0.40 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.45 }, { deg: 3, dur: 0.55 },
+          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 0, dur: 0.65 },
+          { deg: 0, dur: 0.35 }, { deg: 1, dur: 0.35 }, { deg: 2, dur: 0.40 }, { deg: 3, dur: 0.50 },
+          { deg: 2, dur: 0.35 }, { deg: 1, dur: 0.40 }, { deg: 0, dur: 0.85 }
+        ],
+        audioUrl: ''
+      }
+    ];
+
+    // APP STATE
+    let isPro = localStorage.getItem('maqamlab_pro') === 'true';
+    let currentMaqamId = 'bayati';
+    let currentKeyIndex = 1; // Default D3
+    let miftahInstrument = 'qanun'; // 'qanun' atau 'oud'
+    let audioCtx = null;
+    let isDronePlaying = false;
+    let droneOsc1 = null, droneOsc2 = null, droneGain = null;
+
+    // MIC & PITCH DETECTION STATE
+    let isMicActive = false;
+    let micStream = null;
+    let analyserNode = null;
+    let pitchHistory = [];
+    let animFrameId = null;
+
+    // INIT
+    function init() {
+      updateProUI();
+      renderMaqamButtons();
+      renderKeyButtons();
+      selectMaqam('bayati');
+      renderQasidahList();
+      drawCanvasIdle();
+      loadRealInstrumentSamples();
+    }
+
+    // PRO STATUS HANDLER
+    function updateProUI() {
+      const proBadge = document.getElementById('proBadge');
+      const freeBadge = document.getElementById('freeBadge');
+      const upgradeHeader = document.getElementById('upgradeBtnHeader');
+      const ebookOverlay = document.getElementById('ebookBlurOverlay');
+      const ebookBtn = document.getElementById('btnUnlockEbookInline');
+
+      if (isPro) {
+        proBadge.classList.remove('hidden');
+        freeBadge.classList.add('hidden');
+        upgradeHeader.innerHTML = '<span>✓</span> Pro Aktif';
+        upgradeHeader.classList.replace('from-amber-500', 'from-emerald-500');
+        upgradeHeader.classList.replace('to-amber-600', 'to-emerald-600');
+        if (ebookOverlay) ebookOverlay.classList.add('hidden');
+        if (ebookBtn) ebookBtn.classList.add('hidden');
+      }
+    }
+
+    // TAB SWITCHING
+    function switchTab(tabName) {
+      ['studio', 'detector', 'kamus', 'ebook'].forEach(t => {
+        document.getElementById(`view-${t}`).classList.add('hidden');
+        const btn = document.getElementById(`tab-${t}`);
+        btn.classList.remove('border-emerald-400', 'text-emerald-400');
+        btn.classList.add('border-transparent', 'text-slate-400');
+      });
+      document.getElementById(`view-${tabName}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`tab-${tabName}`);
+      activeBtn.classList.add('border-emerald-400', 'text-emerald-400');
+      activeBtn.classList.remove('border-transparent', 'text-slate-400');
+    }
+
+    // INSTRUMENT SELECTOR (QANUN / OUD)
+    function setMiftahInstrument(inst) {
+      miftahInstrument = inst;
+      const btnQanun = document.getElementById('inst-qanun');
+      const btnOud = document.getElementById('inst-oud');
+      const kQanun = document.getElementById('kamus-inst-qanun');
+      const kOud = document.getElementById('kamus-inst-oud');
+      const kIndicator = document.getElementById('kamusInstIndicator');
+
+      const activeClass = 'flex-1 py-1 rounded text-[10px] font-bold bg-amber-500/25 text-amber-300 border border-amber-500/50 transition';
+      const inactiveClass = 'flex-1 py-1 rounded text-[10px] font-bold bg-slate-900/80 text-slate-400 border border-slate-700 hover:text-slate-200 transition';
+
+      if (inst === 'qanun') {
+        if (btnQanun) btnQanun.className = activeClass;
+        if (btnOud) btnOud.className = inactiveClass;
+        if (kQanun) {
+          kQanun.className = 'px-2.5 py-1 rounded-lg font-bold bg-amber-500 text-slate-950 transition';
+          kOud.className = 'px-2.5 py-1 rounded-lg font-bold text-slate-400 hover:text-white transition';
+          kIndicator.textContent = 'Qanun';
+        }
+      } else {
+        if (btnOud) btnOud.className = activeClass;
+        if (btnQanun) btnQanun.className = inactiveClass;
+        if (kOud) {
+          kOud.className = 'px-2.5 py-1 rounded-lg font-bold bg-amber-500 text-slate-950 transition';
+          kQanun.className = 'px-2.5 py-1 rounded-lg font-bold text-slate-400 hover:text-white transition';
+          kIndicator.textContent = 'Oud (Gambus)';
+        }
+      }
+    }
+
+    // RENDER MAQAM BUTTONS
+    function renderMaqamButtons() {
+      const grid = document.getElementById('maqamSelectorGrid');
+      grid.innerHTML = '';
+      Object.values(MAQAM_DATA).forEach(m => {
+        const locked = m.isPro && !isPro;
+        const active = m.id === currentMaqamId;
+        const btn = document.createElement('button');
+        btn.onclick = () => {
+          if (locked) {
+            openUpgradeModal();
+          } else {
+            selectMaqam(m.id);
+          }
+        };
+        btn.className = `p-2.5 rounded-xl border text-left transition flex flex-col justify-between ${
+          active
+            ? 'bg-emerald-500/15 border-emerald-400 text-white shadow-md shadow-emerald-950/40'
+            : 'bg-slate-900/90 border-slate-800 text-slate-300 hover:border-slate-600'
+        }`;
+        btn.innerHTML = `
+          <div class="flex items-center justify-between w-full gap-1">
+            <span class="font-bold text-xs sm:text-sm truncate">${m.name}</span>
+            ${locked ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 font-bold">🔒 PRO</span>' : '<span class="shrink-0 text-[10px] text-emerald-400 font-semibold">Gratis</span>'}
+          </div>
+          <span class="arabic-text text-sm text-slate-400 mt-0.5">${m.arabic}</span>
+        `;
+        grid.appendChild(btn);
+      });
+    }
+
+    // RENDER ROOT KEY BUTTONS
+    function renderKeyButtons() {
+      const grid = document.getElementById('keySelectorGrid');
+      grid.innerHTML = '';
+      ROOT_KEYS.forEach((k, idx) => {
+        const active = idx === currentKeyIndex;
+        const btn = document.createElement('button');
+        btn.onclick = () => selectKey(idx);
+        btn.className = `py-2 rounded-lg text-xs font-bold border transition ${
+          active
+            ? 'bg-amber-500 text-slate-950 border-amber-400'
+            : 'bg-slate-900 text-slate-300 border-slate-700 hover:border-slate-500'
+        }`;
+        btn.textContent = k.label;
+        grid.appendChild(btn);
+      });
+    }
+
+    function selectMaqam(id) {
+      currentMaqamId = id;
+      const m = MAQAM_DATA[id];
+      document.getElementById('activeMaqamTitle').textContent = `Maqam ${m.name}`;
+      document.getElementById('activeMaqamArabic').textContent = `مَقَام ${m.arabic}`;
+      document.getElementById('activeMaqamDesc').textContent = m.desc;
+
+      const badgesContainer = document.getElementById('scaleNotesBadges');
+      badgesContainer.innerHTML = '';
+      m.intervals.forEach((cents, idx) => {
+        const isMicrotonal = cents % 100 !== 0;
+        const badge = document.createElement('span');
+        badge.className = `text-[10px] font-mono px-2 py-1 rounded-md border ${
+          isMicrotonal
+            ? 'bg-amber-500/15 text-amber-300 border-amber-500/40 font-bold'
+            : 'bg-slate-900 text-slate-300 border-slate-700'
+        }`;
+        badge.textContent = `${m.labels[idx]} (${cents}c)`;
+        badgesContainer.appendChild(badge);
+      });
+
+      document.getElementById('miftahSubtitle').textContent = m.audioUrl
+        ? 'Rekaman vokal asli Munsyid'
+        : `Petikan frasa ${m.name}`;
+
+      renderMaqamButtons();
+      if (!isMicActive) drawCanvasIdle();
+    }
+
+    function selectKey(idx) {
+      currentKeyIndex = idx;
+      const k = ROOT_KEYS[idx];
+      document.getElementById('rootHzDisplay').textContent = `${k.label} • ${k.hz.toFixed(1)} Hz`;
+      renderKeyButtons();
+      if (isDronePlaying) {
+        stopDrone();
+        startDrone();
+      }
+    }
+
+    // ==================== WEB AUDIO SYNTHESIZER (QANUN & OUD PLUCK ENGINE) ====================
+    function ensureAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // BUFFER SAMPEL ASLI DARI SLOOPLY (Keduanya terdeteksi di C3)
+    const SAMPLE_BUFFERS = { qanun: null, oud: null };
+
+    const SAMPLE_BASE_HZ = {
+      qanun: 130.77, // Sesuai hasil deteksi C3 (-1 cent)
+      oud: 131.18    // Sesuai hasil deteksi C3 (+5 cents)
+    };
+
+    async function loadRealInstrumentSamples() {
+      ensureAudioContext();
+      // Ubah .wav menjadi .mp3 jika file di folder audio/ Anda berformat MP3
+      const files = {
+        qanun: 'audio/qanun.wav',
+        oud: 'audio/oud.wav'
+      };
+      for (const [key, url] of Object.entries(files)) {
+        if (SAMPLE_BUFFERS[key]) continue;
+        try {
+          const res = await fetch(url);
+          if (!res.ok) continue;
+          const arrayBuf = await res.arrayBuffer();
+          SAMPLE_BUFFERS[key] = await audioCtx.decodeAudioData(arrayBuf);
+          console.log(`Sampel ${key} asli berhasil dimuat!`);
+        } catch (e) {
+          console.warn(`Menggunakan fallback synth untuk ${key}`);
+        }
+      }
+    }
+
+    function playRealSampleNote(inst, targetFreq, startTime, duration) {
+      const buffer = SAMPLE_BUFFERS[inst];
+      if (!buffer) return false;
+
+      // Qanun bermain di oktaf terang (D4-G4), Oud bermain di oktaf hangat (D3-G3)
+      const finalFreq = inst === 'oud' ? targetFreq * 0.5 : targetFreq;
+      const playbackRate = finalFreq / SAMPLE_BASE_HZ[inst];
+
+      const source = audioCtx.createBufferSource();
+      source.buffer = buffer;
+      source.playbackRate.setValueAtTime(playbackRate, startTime);
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.001, startTime);
+      gain.gain.linearRampToValueAtTime(0.92, startTime + 0.008);
+      gain.gain.setValueAtTime(0.92, startTime + duration);
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration + 0.35);
+
+      source.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      source.start(startTime);
+      source.stop(startTime + duration + 0.4);
+      return true;
+    }
+
+    function centsToFreq(rootHz, cents) {
+      return rootHz * Math.pow(2, cents / 1200);
+    }
+
+    // 1. DRONE GENERATOR (Qarar + 5th)
+    function toggleDrone() {
+      if (isDronePlaying) stopDrone();
+      else startDrone();
+    }
+
+    function startDrone() {
+      ensureAudioContext();
+      const rootHz = ROOT_KEYS[currentKeyIndex].hz;
+      const fifthHz = centsToFreq(rootHz, 700);
+
+      droneOsc1 = audioCtx.createOscillator();
+      droneOsc2 = audioCtx.createOscillator();
+      const filter = audioCtx.createBiquadFilter();
+      droneGain = audioCtx.createGain();
+
+      droneOsc1.type = 'sawtooth';
+      droneOsc2.type = 'triangle';
+      droneOsc1.frequency.setValueAtTime(rootHz, audioCtx.currentTime);
+      droneOsc2.frequency.setValueAtTime(fifthHz, audioCtx.currentTime);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(420, audioCtx.currentTime);
+
+      droneGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+      droneGain.gain.exponentialRampToValueAtTime(0.14, audioCtx.currentTime + 0.5);
+
+      droneOsc1.connect(filter);
+      droneOsc2.connect(filter);
+      filter.connect(droneGain);
+      droneGain.connect(audioCtx.destination);
+
+      droneOsc1.start();
+      droneOsc2.start();
+
+      isDronePlaying = true;
+      document.getElementById('droneStatusDot').classList.remove('hidden');
+      document.getElementById('droneActionLabel').textContent = 'Stop';
+      document.getElementById('droneActionLabel').classList.replace('text-emerald-400', 'text-rose-400');
+    }
+
+    function stopDrone() {
+      if (droneOsc1) {
+        try {
+          droneOsc1.stop();
+          droneOsc2.stop();
+        } catch (e) {}
+      }
+      isDronePlaying = false;
+      document.getElementById('droneStatusDot').classList.add('hidden');
+      document.getElementById('droneActionLabel').textContent = 'Putar';
+      document.getElementById('droneActionLabel').classList.replace('text-rose-400', 'text-emerald-400');
+    }
+
+    // Petikan Qanun (Jernih, cerah, lapisan senar unison)
+    function pluckQanunNote(freq, startTime, duration) {
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const harmonicOsc = audioCtx.createOscillator();
+
+      osc1.type = 'sawtooth';
+      osc2.type = 'triangle';
+      harmonicOsc.type = 'sine';
+
+      osc1.frequency.setValueAtTime(freq, startTime);
+      osc2.frequency.setValueAtTime(freq, startTime);
+      osc2.detune.setValueAtTime(4, startTime);
+      harmonicOsc.frequency.setValueAtTime(freq * 2, startTime);
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.Q.setValueAtTime(2.2, startTime);
+      filter.frequency.setValueAtTime(Math.min(4800, freq * 7), startTime);
+      filter.frequency.exponentialRampToValueAtTime(Math.max(600, freq * 1.6), startTime + Math.min(duration, 0.65));
+
+      const gain = audioCtx.createGain();
+      const harmGain = audioCtx.createGain();
+      harmGain.gain.setValueAtTime(0.08, startTime);
+      harmGain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.18);
+
+      gain.gain.setValueAtTime(0.001, startTime);
+      gain.gain.linearRampToValueAtTime(0.24, startTime + 0.008);
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration + 0.25);
+
+      osc1.connect(filter);
+      osc2.connect(filter);
+      harmonicOsc.connect(harmGain);
+      harmGain.connect(filter);
+
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      const stopTime = startTime + duration + 0.3;
+      osc1.start(startTime);
+      osc2.start(startTime);
+      harmonicOsc.start(startTime);
+      osc1.stop(stopTime);
+      osc2.stop(stopTime);
+      harmonicOsc.stop(stopTime);
+    }
+
+    // Petikan Oud / Gambus (Hangat, resonansi kayu, fretless bend halus)
+    function pluckOudNote(freq, startTime, duration) {
+      const oudFreq = freq * 0.5;
+      const oscMain = audioCtx.createOscillator();
+      const oscBody = audioCtx.createOscillator();
+
+      oscMain.type = 'triangle';
+      oscBody.type = 'sawtooth';
+
+      oscMain.frequency.setValueAtTime(oudFreq * 0.991, startTime);
+      oscMain.frequency.exponentialRampToValueAtTime(oudFreq, startTime + 0.028);
+      oscBody.frequency.setValueAtTime(oudFreq, startTime);
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.Q.setValueAtTime(1.5, startTime);
+      filter.frequency.setValueAtTime(Math.min(2200, oudFreq * 5), startTime);
+      filter.frequency.exponentialRampToValueAtTime(Math.max(320, oudFreq * 1.3), startTime + Math.min(duration, 0.55));
+
+      const bodyGain = audioCtx.createGain();
+      bodyGain.gain.setValueAtTime(0.09, startTime);
+
+      const masterGain = audioCtx.createGain();
+      masterGain.gain.setValueAtTime(0.001, startTime);
+      masterGain.gain.linearRampToValueAtTime(0.30, startTime + 0.012);
+      masterGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration + 0.22);
+
+      oscMain.connect(filter);
+      oscBody.connect(bodyGain);
+      bodyGain.connect(filter);
+
+      filter.connect(masterGain);
+      masterGain.connect(audioCtx.destination);
+
+      const stopTime = startTime + duration + 0.28;
+      oscMain.start(startTime);
+      oscBody.start(startTime);
+      oscMain.stop(stopTime);
+      oscBody.stop(stopTime);
+    }
+
+    // ENGINE PEMUTAR FRASA & MELODI SHALAWAT (QANUN / OUD)
+    function playLegatoArabicMelody(maqamObj, rootHz, patternSteps) {
+      ensureAudioContext();
+      loadRealInstrumentSamples();
+
+      let cursor = audioCtx.currentTime + 0.05;
+      const totalDuration = patternSteps.reduce((acc, s) => acc + s.dur, 0) + 0.3;
+
+      patternSteps.forEach((step, idx) => {
+        const freq = centsToFreq(rootHz, maqamObj.intervals[step.deg]);
+        const isLastNote = idx === patternSteps.length - 1;
+
+        const playedReal = playRealSampleNote(miftahInstrument, freq, cursor, step.dur);
+
+        if (playedReal) {
+          if (isLastNote && step.dur >= 0.7) {
+            playRealSampleNote(miftahInstrument, freq, cursor + 0.15, step.dur - 0.15);
+          }
+        } else {
+          if (miftahInstrument === 'qanun') {
+            pluckQanunNote(freq, cursor, step.dur);
+            if (isLastNote && step.dur >= 0.7) pluckQanunNote(freq, cursor + 0.14, step.dur - 0.14);
+          } else {
+            pluckOudNote(freq, cursor, step.dur);
+            if (isLastNote && step.dur >= 0.7) pluckOudNote(freq, cursor + 0.16, step.dur - 0.16);
+          }
+        }
+
+        cursor += step.dur;
+      });
+
+      return totalDuration;
+    }
+
+    // 2. PLAY SULLAM (TANGGA NADA NAIK & TURUN)
+    function playSullam() {
+      const m = MAQAM_DATA[currentMaqamId];
+      const rootHz = ROOT_KEYS[currentKeyIndex].hz * 2;
+      const steps = [];
+      for (let i = 0; i < m.intervals.length; i++) steps.push({ deg: i, dur: 0.34 });
+      for (let i = m.intervals.length - 2; i >= 0; i--) steps.push({ deg: i, dur: 0.34 });
+      playLegatoArabicMelody(m, rootHz, steps);
+    }
+
+    // 3. PLAY SAMPLE FRASA MIFTAH
+    function playMiftahSample() {
+      const m = MAQAM_DATA[currentMaqamId];
+      if (m.audioUrl) {
+        const player = document.getElementById('munsyidAudioPlayer');
+        player.src = m.audioUrl;
+        player.play();
+        return;
+      }
+      const rootHz = ROOT_KEYS[currentKeyIndex].hz * 2;
+      playLegatoArabicMelody(m, rootHz, m.miftahPattern);
+    }
+
+    // ==================== REAL-TIME PITCH DETECTOR (AUTOCORRELATION) ====================
+    async function toggleMicrophone() {
+      if (isMicActive) stopMicrophone();
+      else await startMicrophone();
+    }
+
+    async function startMicrophone() {
+      try {
+        ensureAudioContext();
+        micStream = await navigator.mediaDevices.getUserMedia({
+          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: false }
+        });
+        const source = audioCtx.createMediaStreamSource(micStream);
+        analyserNode = audioCtx.createAnalyser();
+        analyserNode.fftSize = 2048;
+        source.connect(analyserNode);
+
+        isMicActive = true;
+        pitchHistory = [];
+        document.getElementById('canvasOverlayHint').classList.add('hidden');
+        document.getElementById('micBtnText').textContent = 'Hentikan Mikrofon';
+        document.getElementById('btnMicToggle').classList.replace('bg-emerald-500', 'bg-rose-500');
+        document.getElementById('btnMicToggle').classList.replace('hover:bg-emerald-400', 'hover:bg-rose-400');
+
+        detectPitchLoop();
+      } catch (err) {
+        alert('Izin mikrofon ditolak atau perangkat tidak mendukung audio input.');
+      }
+    }
+
+    function stopMicrophone() {
+      isMicActive = false;
+      if (animFrameId) cancelAnimationFrame(animFrameId);
+      if (micStream) micStream.getTracks().forEach(t => t.stop());
+      document.getElementById('canvasOverlayHint').classList.remove('hidden');
+      document.getElementById('micBtnText').textContent = 'Mulai Deteksi Suara';
+      document.getElementById('btnMicToggle').classList.replace('bg-rose-500', 'bg-emerald-500');
+      document.getElementById('btnMicToggle').classList.replace('hover:bg-rose-400', 'hover:bg-emerald-400');
+      document.getElementById('liveDegreeName').textContent = '—';
+      document.getElementById('liveCentsDiff').textContent = '—';
+      document.getElementById('liveFreqHz').textContent = '0 Hz';
+    }
+
+   function autoCorrelate(buf, sampleRate) {
+      const maxLen = Math.min(buf.length, 1024);
+      let rms = 0;
+      for (let i = 0; i < maxLen; i++) rms += buf[i] * buf[i];
+      rms = Math.sqrt(rms / maxLen);
+      if (rms < 0.015) return -1;
+
+      let r1 = 0, r2 = maxLen - 1, thres = 0.2;
+      for (let i = 0; i < maxLen / 2; i++) {
+        if (Math.abs(buf[i]) < thres) { r1 = i; break; }
+      }
+      for (let i = 1; i < maxLen / 2; i++) {
+        if (Math.abs(buf[maxLen - i]) < thres) { r2 = maxLen - i; break; }
+      }
+
+      const trimmedLen = r2 - r1;
+      if (trimmedLen < 64) return -1;
+
+      // Fokus ke rentang fundamental vokal manusia (110 Hz - 650 Hz) agar tidak tertipu bass/rebana
+      const minLag = Math.max(1, Math.floor(sampleRate / 650));
+      const maxLag = Math.min(trimmedLen - 2, Math.floor(sampleRate / 110));
+
+      const corrArr = new Float32Array(maxLag + 2);
+      let prevCorr = 0;
+      let passedZero = false;
+      let bestCorr = -1;
+      let bestLag = -1;
+
+      for (let lag = minLag; lag <= maxLag; lag++) {
+        let corr = 0;
+        for (let j = 0; j < trimmedLen - lag; j++) {
+          corr += buf[r1 + j] * buf[r1 + j + lag];
+        }
+        corrArr[lag] = corr;
+
+        if (!passedZero && corr < prevCorr) {
+          passedZero = true;
+        }
+        if (passedZero && corr > bestCorr) {
+          bestCorr = corr;
+          bestLag = lag;
+        }
+        prevCorr = corr;
+      }
+
+      if (bestLag <= minLag || bestLag >= maxLag) return -1;
+
+      // Parabolic interpolation untuk menemukan puncak sub-sampel (presisi mikrotonal)
+      const y1 = corrArr[bestLag - 1];
+      const y2 = corrArr[bestLag];
+      const y3 = corrArr[bestLag + 1];
+      const denom = 2 * (2 * y2 - y1 - y3);
+      const shift = denom !== 0 ? (y3 - y1) / denom : 0;
+      const exactLag = bestLag + shift;
+
+      return sampleRate / exactLag;
+    }
+
+    function detectPitchLoop() {
+      if (!isMicActive) return;
+      const buffer = new Float32Array(analyserNode.fftSize);
+      analyserNode.getFloatTimeDomainData(buffer);
+      const freq = autoCorrelate(buffer, audioCtx.sampleRate);
+
+      const m = MAQAM_DATA[currentMaqamId];
+      const rootHz = ROOT_KEYS[currentKeyIndex].hz;
+
+      if (freq > 75 && freq < 900) {
+        let rawCents = 1200 * Math.log2(freq / rootHz);
+        while (rawCents < -50) rawCents += 1200;
+        while (rawCents > 1250) rawCents -= 1200;
+
+        let closestIdx = 0;
+        let minDiff = Infinity;
+        m.intervals.forEach((targetCents, idx) => {
+          const diff = rawCents - targetCents;
+          if (Math.abs(diff) < Math.abs(minDiff)) {
+            minDiff = diff;
+            closestIdx = idx;
+          }
+        });
+
+        const roundedDiff = Math.round(minDiff);
+        document.getElementById('liveFreqHz').textContent = `${freq.toFixed(1)} Hz`;
+        document.getElementById('liveDegreeName').textContent = m.labels[closestIdx];
+
+        const diffEl = document.getElementById('liveCentsDiff');
+        if (Math.abs(roundedDiff) <= 18) {
+          diffEl.textContent = `PAS (${roundedDiff >= 0 ? '+' : ''}${roundedDiff}c)`;
+          diffEl.className = 'text-base sm:text-lg font-extrabold text-emerald-400 mt-0.5';
+        } else if (roundedDiff > 18) {
+          diffEl.textContent = `Terlalu Tinggi (+${roundedDiff}c)`;
+          diffEl.className = 'text-base sm:text-lg font-extrabold text-amber-400 mt-0.5';
+        } else {
+          diffEl.textContent = `Terlalu Rendah (${roundedDiff}c)`;
+          diffEl.className = 'text-base sm:text-lg font-extrabold text-rose-400 mt-0.5';
+        }
+
+        pitchHistory.push({ cents: rawCents, diff: roundedDiff });
+      } else {
+        pitchHistory.push(null);
+      }
+
+      if (pitchHistory.length > 140) pitchHistory.shift();
+      drawPitchCanvas();
+      animFrameId = requestAnimationFrame(detectPitchLoop);
+    }
+
+    // ==================== CANVAS RENDERER ====================
+    function setupCanvasSize(canvas) {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      return { ctx, width: rect.width, height: rect.height };
+    }
+
+    function drawCanvasIdle() {
+      const canvas = document.getElementById('pitchCanvas');
+      if (!canvas) return;
+      const { ctx, width, height } = setupCanvasSize(canvas);
+      drawMaqamGrid(ctx, width, height);
+    }
+
+    function drawMaqamGrid(ctx, width, height) {
+      ctx.clearRect(0, 0, width, height);
+      const m = MAQAM_DATA[currentMaqamId];
+      const padY = 24;
+      const usableH = height - padY * 2;
+
+      m.intervals.forEach((cents, idx) => {
+        const y = height - padY - (cents / 1200) * usableH;
+        const isMicrotonal = cents % 100 !== 0;
+
+        ctx.beginPath();
+        ctx.moveTo(85, y);
+        ctx.lineTo(width - 12, y);
+        ctx.lineWidth = isMicrotonal ? 1.5 : 1;
+        ctx.strokeStyle = isMicrotonal ? 'rgba(245, 158, 11, 0.55)' : 'rgba(148, 163, 184, 0.18)';
+        if (isMicrotonal) ctx.setLineDash([5, 4]);
+        else ctx.setLineDash([]);
+        ctx.stroke();
+
+        ctx.fillStyle = isMicrotonal ? '#FBBF24' : '#94A3B8';
+        ctx.font = isMicrotonal ? 'bold 10px "Plus Jakarta Sans"' : '10px "Plus Jakarta Sans"';
+        ctx.fillText(m.labels[idx], 8, y + 3);
+      });
+      ctx.setLineDash([]);
+    }
+
+    function drawPitchCanvas() {
+      const canvas = document.getElementById('pitchCanvas');
+      const { ctx, width, height } = setupCanvasSize(canvas);
+      drawMaqamGrid(ctx, width, height);
+
+      const padY = 24;
+      const usableH = height - padY * 2;
+      const startX = 90;
+      const stepX = (width - startX - 20) / 140;
+
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+
+      for (let i = 1; i < pitchHistory.length; i++) {
+        const prev = pitchHistory[i - 1];
+        const curr = pitchHistory[i];
+        if (!prev || !curr) continue;
+
+        const x1 = startX + (i - 1) * stepX;
+        const y1 = height - padY - (prev.cents / 1200) * usableH;
+        const x2 = startX + i * stepX;
+        const y2 = height - padY - (curr.cents / 1200) * usableH;
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = Math.abs(curr.diff) <= 18 ? '#10B981' : '#F59E0B';
+        ctx.stroke();
+
+        if (i === pitchHistory.length - 1) {
+          ctx.beginPath();
+          ctx.arc(x2, y2, 5.5, 0, Math.PI * 2);
+          ctx.fillStyle = Math.abs(curr.diff) <= 18 ? '#34D399' : '#FBBF24';
+          ctx.fill();
+        }
+      }
+    }
+
+    // ==================== ENGINE AI & DSP DETEKSI MAQAM AKURAT (8 MAQAM) ====================
+    let isScanningMic = false;
+    let scanPitchSamples = [];
+    let scanIntervalId = null;
+
+    async function toggleMaqamScanMic() {
+      if (isScanningMic) {
+        finishMicScan();
+        return;
+      }
+
+      try {
+        ensureAudioContext();
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: { echoCancellation: true, noiseSuppression: true }
+        });
+        const source = audioCtx.createMediaStreamSource(stream);
+        const analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 2048;
+        source.connect(analyser);
+
+        isScanningMic = true;
+        scanPitchSamples = [];
+        let elapsed = 0;
+        const maxSeconds = 10;
+
+        const btn = document.getElementById('btnAnalyzeMic');
+        btn.textContent = '■ Selesai & Analisis Sekarang';
+        btn.classList.replace('bg-emerald-500', 'bg-rose-500');
+        document.getElementById('recStatusText').textContent = 'Mendengarkan melodi shalawat...';
+
+        const buffer = new Float32Array(analyser.fftSize);
+        const sampleCollector = setInterval(() => {
+          if (!isScanningMic) {
+            clearInterval(sampleCollector);
+            return;
+          }
+          analyser.getFloatTimeDomainData(buffer);
+          const freq = autoCorrelate(buffer, audioCtx.sampleRate);
+          if (freq > 80 && freq < 850) {
+            scanPitchSamples.push(freq);
+          }
+        }, 50);
+
+        scanIntervalId = setInterval(() => {
+          elapsed += 0.2;
+          const pct = Math.min(100, (elapsed / maxSeconds) * 100);
+          document.getElementById('recProgressBar').style.width = `${pct}%`;
+          document.getElementById('recTimerText').textContent = `00:${Math.floor(elapsed).toString().padStart(2, '0')}`;
+
+          if (elapsed >= maxSeconds) {
+            clearInterval(sampleCollector);
+            stream.getTracks().forEach(t => t.stop());
+            finishMicScan();
+          }
+        }, 200);
+
+      } catch (e) {
+        alert('Gagal mengakses mikrofon. Pastikan izin mikrofon aktif.');
+      }
+    }
+
+    function finishMicScan() {
+      isScanningMic = false;
+      clearInterval(scanIntervalId);
+      const btn = document.getElementById('btnAnalyzeMic');
+      btn.textContent = '● Mulai Rekam & Analisis (10 Detik)';
+      btn.classList.replace('bg-rose-500', 'bg-emerald-500');
+      document.getElementById('recStatusText').textContent = 'Analisis selesai.';
+
+      if (scanPitchSamples.length < 15) {
+        alert('Suara terlalu singkat atau pelan. Coba senandungkan minimal 5-8 detik dengan jelas.');
+        return;
+      }
+      runAccurateMaqamClassifier(scanPitchSamples);
+    }
+
+    async function analyzeUploadedAudio(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      try {
+        ensureAudioContext();
+        document.getElementById('recStatusText').textContent = `Memproses file: ${file.name}...`;
+
+        const arrayBuffer = await file.arrayBuffer();
+        const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+        const channelData = audioBuffer.getChannelData(0);
+        const sampleRate = audioBuffer.sampleRate;
+
+        const maxSamples = Math.min(channelData.length, sampleRate * 12);
+        const targetFrames = 45;
+        const stepSize = Math.max(1024, Math.floor(maxSamples / targetFrames));
+        const extractedFreqs = [];
+
+        for (let i = 0; i < maxSamples - 1024; i += stepSize) {
+          const slice = channelData.subarray(i, i + 1024);
+          const freq = autoCorrelate(slice, sampleRate);
+          if (freq > 75 && freq < 900) {
+            extractedFreqs.push(freq);
+          }
+        }
+
+        document.getElementById('recStatusText').textContent = 'Analisis selesai.';
+
+        if (extractedFreqs.length < 3) {
+          alert('Nada tidak terbaca jelas. Pastikan file berisi vokal solo atau petikan nada yang jelas.');
+          return;
+        }
+        runAccurateMaqamClassifier(extractedFreqs);
+      } catch (err) {
+        console.error(err);
+        alert('Gagal membaca file audio. Pastikan formatnya MP3 atau WAV yang valid.');
+      } finally {
+        event.target.value = '';
+      }
+    }
+
+    // 2. KLASIFIKATOR MAQAM + DETEKTOR NADA TUNGGAL (SINGLE-NOTE FINDER)
+    function runAccurateMaqamClassifier(freqs) {
+      const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+      // Hitung median frekuensi & jumlah nada unik (dalam kelipatan semitone)
+      const sortedFreqs = [...freqs].sort((a, b) => a - b);
+      const medianFreq = sortedFreqs[Math.floor(sortedFreqs.length / 2)];
+      const uniqueSemitones = new Set(freqs.map(f => Math.round(69 + 12 * Math.log2(f / 440))));
+
+      // MODE A: JIKA YANG DIUNGGAH ADALAH SAMPEL 1–2 NADA TUNGGAL (SEPERTI ONE-SHOT QANUN/OUD)
+      if (uniqueSemitones.size <= 2) {
+        const midiExact = 69 + 12 * Math.log2(medianFreq / 440);
+        const midiRound = Math.round(midiExact);
+        const noteName = noteNames[((midiRound % 12) + 12) % 12];
+        const octave = Math.floor(midiRound / 12) - 1;
+        const centsOff = Math.round((midiExact - midiRound) * 100);
+
+        document.getElementById('detectorResultBox').classList.remove('hidden');
+        document.getElementById('resPrimaryMaqam').textContent = `Nada Tunggal: ${noteName}${octave} (${medianFreq.toFixed(2)} Hz)`;
+        document.getElementById('resConfidenceBadge').textContent = `Mode Tuner / One-Shot`;
+        document.getElementById('resDetectedRoot').textContent = `Deviasi Tuning: ${centsOff >= 0 ? '+' : ''}${centsOff} cents dari ${noteName}${octave}`;
+
+        document.getElementById('resScoreBars').innerHTML = `
+          <div class="p-3 rounded-xl bg-slate-950/90 border border-amber-500/30 text-xs text-slate-300">
+            ℹ️ File ini hanya berisi <b>1 nada tunggal (${noteName}${octave})</b>, bukan melodi kalimat shalawat, sehingga belum bisa ditentukan maqamnya.
+            <br/><br/>
+            Untuk memakai file ini sebagai sampel instrumen di <b>MaqamLab</b>, isi <code class="text-amber-400">SAMPLE_BASE_HZ</code> dengan angka <b class="text-emerald-400">${medianFreq.toFixed(2)}</b>.
+          </div>
+        `;
+        document.getElementById('resExplanation').textContent = `Terdeteksi frekuensi fundamental stabil di ${medianFreq.toFixed(2)} Hz (${noteName}${octave}). Rekam atau unggah minimal 4–5 nada melodi berbeda untuk mendeteksi tangga nada maqam.`;
+        return;
+      }
+
+      // MODE B: JIKA YANG DIUNGGAH ADALAH MELODI SHALAWAT (>= 3 NADA BERBEDA)
+      const BINS_PER_OCTAVE = 120;
+      const histogram = new Float32Array(BINS_PER_OCTAVE);
+
+      const centsList = freqs.map(f => {
+        const midi = 69 + 12 * Math.log2(f / 440);
+        return (((midi % 12) + 12) % 12) * 100;
+      });
+
+      const tailStart = Math.floor(centsList.length * 0.72);
+
+      centsList.forEach((c, idx) => {
+        const weight = idx >= tailStart ? 2.8 : 1.0;
+        for (let b = 0; b < BINS_PER_OCTAVE; b++) {
+          const binCents = b * 10;
+          let dist = Math.abs(c - binCents);
+          if (dist > 600) dist = 1200 - dist;
+          if (dist <= 35) {
+            histogram[b] += weight * Math.exp(-(dist * dist) / (2 * 14 * 14));
+          }
+        }
+      });
+
+      let allScores = [];
+
+      Object.values(MAQAM_DATA).forEach(maqam => {
+        let bestMaqamScore = -Infinity;
+        let bestTonicBin = 0;
+
+        for (let tonicBin = 0; tonicBin < BINS_PER_OCTAVE; tonicBin++) {
+          let matchEnergy = 0;
+          let totalEnergy = 0;
+
+          maqam.intervals.forEach((iv, degIdx) => {
+            if (iv === 1200) return;
+            const targetBin = (tonicBin + Math.round(iv / 10)) % BINS_PER_OCTAVE;
+            const energyAtDegree = histogram[targetBin];
+
+            let degreeWeight = 1.0;
+            if (degIdx === 0) degreeWeight = 1.6;
+            if (degIdx === 1) degreeWeight = 1.8;
+            if (degIdx === 2 || degIdx === 3) degreeWeight = 1.3;
+
+            matchEnergy += energyAtDegree * degreeWeight;
+          });
+
+          for (let b = 0; b < BINS_PER_OCTAVE; b++) {
+            totalEnergy += histogram[b];
+            const relCents = (((b - tonicBin) + BINS_PER_OCTAVE) % BINS_PER_OCTAVE) * 10;
+            let minDist = Infinity;
+            maqam.intervals.forEach(iv => {
+              const t = iv % 1200;
+              const d = Math.min(Math.abs(relCents - t), 1200 - Math.abs(relCents - t));
+              if (d < minDist) minDist = d;
+            });
+            if (minDist > 30) {
+              matchEnergy -= histogram[b] * 0.55;
+            }
+          }
+
+          const rawRatio = totalEnergy > 0 ? matchEnergy / (totalEnergy * 0.48) : 0;
+          const normalizedScore = Math.max(5, Math.min(98, Math.round(rawRatio * 100)));
+          if (normalizedScore > bestMaqamScore) {
+            bestMaqamScore = normalizedScore;
+            bestTonicBin = tonicBin;
+          }
+        }
+
+        allScores.push({ maqam, score: bestMaqamScore, tonicBin: bestTonicBin });
+      });
+
+      allScores.sort((a, b) => b.score - a.score);
+      const bestResult = allScores[0];
+
+      const semitoneFloat = bestResult.tonicBin / 10;
+      const nearestSemi = Math.round(semitoneFloat) % 12;
+      const microOffset = Math.round((semitoneFloat - Math.round(semitoneFloat)) * 100);
+      const tonicName = noteNames[nearestSemi] + (Math.abs(microOffset) >= 35 ? ' (½♯/♭)' : '');
+
+      document.getElementById('detectorResultBox').classList.remove('hidden');
+      document.getElementById('resPrimaryMaqam').textContent = `Maqam ${bestResult.maqam.name} (${bestResult.maqam.arabic})`;
+      document.getElementById('resConfidenceBadge').textContent = `Kecocokan ${bestResult.score}%`;
+      document.getElementById('resDetectedRoot').textContent = `Nada Tumpuan Dasar (Qarar): ${tonicName}`;
+
+      const barsContainer = document.getElementById('resScoreBars');
+      barsContainer.innerHTML = '';
+      allScores.forEach((item, idx) => {
+        const isTop = idx === 0;
+        const barColor = isTop ? '#10B981' : '#475569';
+        barsContainer.innerHTML += `
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="${isTop ? 'font-bold text-emerald-400' : 'text-slate-300'}">${item.maqam.name}</span>
+              <span class="font-mono ${isTop ? 'font-bold text-emerald-400' : 'text-slate-400'}">${item.score}%</span>
+            </div>
+            <div style="width: 100%; height: 8px; background-color: #020617; border-radius: 999px; overflow: hidden;">
+              <div style="width: ${item.score}%; height: 100%; background-color: ${barColor}; border-radius: 999px; transition: width 0.4s ease;"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      const explanations = {
+        bayati: 'Terdeteksi penekanan kuat pada derajat ke-2 seperempat nada (150 cents / half-flat) yang turun lembut menuju nada dasar Qarar. Karakter khas Maqam Bayati.',
+        hijaz: 'Terdeteksi lompatan interval lebar 1½ nada (300 cents) antara derajat ke-2 dan ke-3 yang sangat dramatis. Ciri khas utama Maqam Hijaz.',
+        shoba: 'Terdeteksi kombinasi khas derajat ke-2 half-flat (150 cents) dengan nada ke-4 yang merendah (400 cents), menghasilkan nuansa haru menyayat hati khas Maqam Shoba.',
+        rast: 'Terdeteksi pijakan mayor di nada ke-2 diikuti derajat ke-3 half-flat (350 cents) yang tegas dan berwibawa. Pola khas Maqam Rast.',
+        nahawand: 'Terdeteksi struktur tangga nada minor harmonis murni (200 & 300 cents) tanpa interval seperempat nada. Karakter khas Maqam Nahawand.',
+        kurdi: 'Terdeteksi penurunan setengah nada penuh pada derajat ke-2 (100 cents) dan ke-3 (300 cents) yang lembut dan modern. Ciri khas Maqam Kurdi.',
+        ajam: 'Terdeteksi interval mayor cerah (200 & 400 cents) yang bertenaga dan optimis tanpa quarter-tone. Karakter khas Maqam \'Ajam / Jiharkah.',
+        sika: 'Terdeteksi pijakan dasar half-flat yang langsung melangkah ke interval 150 dan 350 cents. Karakter khas Maqam Sika.'
+      };
+      document.getElementById('resExplanation').textContent = explanations[bestResult.maqam.id];
+
+      document.getElementById('btnJumpDetected').onclick = () => {
+        if (bestResult.maqam.isPro && !isPro) {
+          openUpgradeModal();
+        } else {
+          selectMaqam(bestResult.maqam.id);
+          switchTab('studio');
+        }
+      };
+    }
+
+    // ==================== KAMUS QASIDAH PLAYER & RENDERER ====================
+    function playQasidahMelody(qasidahIndex, btnEl) {
+      const q = QASIDAH_LIST[qasidahIndex];
+      const m = MAQAM_DATA[q.primaryMaqam];
+
+      if (q.audioUrl) {
+        const player = document.getElementById('munsyidAudioPlayer');
+        player.src = q.audioUrl;
+        player.play();
+        return;
+      }
+
+      const rootHz = ROOT_KEYS[q.keyIndex].hz * 2;
+      const totalDuration = playLegatoArabicMelody(m, rootHz, q.melody);
+
+      if (btnEl) {
+        const originalText = btnEl.innerHTML;
+        btnEl.innerHTML = '🔊 Memutar...';
+        btnEl.classList.add('ring-2', 'ring-white');
+        setTimeout(() => {
+          btnEl.innerHTML = originalText;
+          btnEl.classList.remove('ring-2', 'ring-white');
+        }, totalDuration * 1000);
+      }
+    }
+
+    function renderQasidahList() {
+      const query = document.getElementById('searchQasidah').value.toLowerCase();
+      const grid = document.getElementById('qasidahGrid');
+      grid.innerHTML = '';
+
+      QASIDAH_LIST.forEach((q, originalIndex) => {
+        if (!q.title.toLowerCase().includes(query) && !q.latin.toLowerCase().includes(query)) return;
+
+        const primary = MAQAM_DATA[q.primaryMaqam];
+        const secondary = MAQAM_DATA[q.secondaryMaqam];
+        const keyLabel = ROOT_KEYS[q.keyIndex].label;
+
+        const card = document.createElement('div');
+        card.className = 'bg-brand-card border border-brand-border rounded-2xl p-4 flex flex-col justify-between hover:border-emerald-500/40 transition';
+        card.innerHTML = `
+          <div>
+            <div class="flex items-start justify-between gap-2">
+              <h3 class="font-bold text-sm sm:text-base text-white">${q.title}</h3>
+              <span class="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-amber-400 border border-slate-700">Kunci ${keyLabel}</span>
+            </div>
+            <div class="flex flex-wrap gap-1.5 mt-2">
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Utama: ${primary.name}</span>
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-sky-500/15 text-sky-400 border border-sky-500/30">Reff/Jawab: ${secondary.name}</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-slate-400">${q.rhythm}</span>
+            </div>
+
+            <div class="mt-3 p-3 rounded-xl bg-slate-950/80 border border-slate-800/80">
+              <p class="arabic-text text-lg sm:text-xl text-white text-right">${q.arabic}</p>
+              <p class="text-xs italic text-slate-400 mt-1">${q.latin}</p>
+            </div>
+
+            <p class="text-[11px] text-slate-300 mt-2.5">💡 ${q.note}</p>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-800 grid grid-cols-2 gap-2">
+            <button onclick="playQasidahMelody(${originalIndex}, this)" class="py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition flex items-center justify-center gap-1.5 shadow">
+              ▶ Putar Shalawat
+            </button>
+            <button onclick="loadQasidahToStudio('${q.primaryMaqam}', ${q.keyIndex})" class="py-2 px-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/40 font-bold text-xs transition flex items-center justify-center gap-1.5">
+              🎙️ Latih di Studio
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function loadQasidahToStudio(maqamId, keyIdx) {
+      const m = MAQAM_DATA[maqamId];
+      if (m.isPro && !isPro) {
+        openUpgradeModal();
+        return;
+      }
+      selectKey(keyIdx);
+      selectMaqam(maqamId);
+      switchTab('studio');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ==================== MODAL & ACTIVATION HANDLER ====================
+    function openUpgradeModal() {
+      document.getElementById('upgradeModal').classList.remove('hidden');
+    }
+
+    function closeUpgradeModal() {
+      document.getElementById('upgradeModal').classList.add('hidden');
+    }
+
+    function verifyActivationCode() {
+      const input = document.getElementById('activationCodeInput').value.trim().toUpperCase();
+      const feedback = document.getElementById('activationFeedback');
+      const validCodes = ['SYAMS2026', 'MUNSYIDPRO', 'HADRAHPRO'];
+
+      feedback.classList.remove('hidden');
+      if (validCodes.includes(input)) {
+        isPro = true;
+        localStorage.setItem('maqamlab_pro', 'true');
+        feedback.textContent = '✓ Berhasil! Seluruh 8 Maqam & E-Book Munsyid Pro telah aktif.';
+        feedback.className = 'text-[11px] mt-1.5 text-emerald-400 font-bold';
+        updateProUI();
+        renderMaqamButtons();
+        setTimeout(() => {
+          closeUpgradeModal();
+        }, 1200);
+      } else {
+        feedback.textContent = '✕ Kode tidak valid. Gunakan kode demo SYAMS2026 atau hubungi admin Syams Digital.';
+        feedback.className = 'text-[11px] mt-1.5 text-rose-400';
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      if (!isMicActive) drawCanvasIdle();
+    });
+
+    init();
+  </script>
+</body>
+</html>
