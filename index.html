@@ -1032,10 +1032,9 @@
 
     async function loadRealInstrumentSamples() {
       ensureAudioContext();
-      // Ubah .wav menjadi .mp3 jika file di folder audio/ Anda berformat MP3
       const files = {
-        qanun: 'audio/qanun.wav',
-        oud: 'audio/oud.wav'
+        qanun: encodeURI('audio/311_DI_01__Kanun.wav'),
+        oud: encodeURI('audio/214_Ethnic (Oud).wav')
       };
       for (const [key, url] of Object.entries(files)) {
         if (SAMPLE_BUFFERS[key]) continue;
