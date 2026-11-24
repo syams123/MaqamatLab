@@ -339,8 +339,8 @@ const QASIDAH = [
     'Ya khoiro hadi lil anami tasama<br>\'Athfan \'ala man dzaba fika ghoroma',
     'Karakter Rast yang gagah dan mantap, menonjolkan nada Sikah ke-3 dan Awj ke-7 (half-flat).',
     [[0,.4],[2,.4],[4,.55],[4,.35],[5,.4],[4,.35],[3,.4],[2,.6],[2,.35],[3,.35],[4,.45],[3,.35],[2,.4],[1,.4],[0,.85]]]
-].map(([title, pm, sm, key, rhythm, arabic, latin, note, mel]) =>
-  ({ title, pm, sm, key, rhythm, arabic, latin, note, melody: mel.map(([deg, dur]) => ({ deg, dur })) }));
+].map(([title, pm, sm, key, rhythm, arabic, latin, note, mel, audioUrl]) =>
+  ({ title, pm, sm, key, rhythm, arabic, latin, note, audioUrl, melody: mel.map(([deg, dur]) => ({ deg, dur })) }));
 
 // ============ STATE ============
 const $ = id => document.getElementById(id);
