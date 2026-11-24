@@ -169,11 +169,11 @@ body{background:#070F12;color:#F1F5F9;font-family:'Plus Jakarta Sans',sans-serif
 <!-- KAMUS -->
 <section id="view-kamus" class="hidden space-y-5">
   <div class="bg-brand-card border border-brand-border rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-    <div><h2 class="text-lg font-extrabold text-white">Kamus nada qasidah klasik</h2><p class="text-xs text-slate-400">Melodi contoh pendekatan (belum divalidasi qari) dengan suara <span id="instInd" class="text-amber-400 font-semibold">Qanun</span>.</p></div>
-    <div class="flex flex-wrap items-center gap-2">
-      <div class="flex gap-1"><button class="inst on" data-inst="qanun" onclick="setInst('qanun')">🪕 Qanun</button><button class="inst" data-inst="oud" onclick="setInst('oud')">🎸 Oud</button></div>
-      <input id="search" oninput="renderKamus()" placeholder="Cari judul…" class="bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 w-full sm:w-52">
+    <div>
+      <h2 class="text-lg font-extrabold text-white">Kamus nada qasidah klasik</h2>
+      <p class="text-xs text-slate-400">Klik <b>Putar melodi</b> untuk mendengarkan contoh lantunan & maqam tiap qasidah.</p>
     </div>
+    <input id="search" oninput="renderKamus()" placeholder="Cari judul…" class="bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 w-full sm:w-64">
   </div>
   <div id="kamusGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
 </section>
@@ -392,9 +392,10 @@ function switchTab(t) {
 function setInst(i) {
   inst = i;
   document.querySelectorAll('[data-inst]').forEach(b => b.classList.toggle('on', b.dataset.inst === i));
-  $('instInd').textContent = i === 'qanun' ? 'Qanun' : 'Oud (Gambus)';
+  const ind = $('instInd');
+  if (ind) ind.textContent = i === 'qanun' ? 'Qanun' : 'Oud (Gambus)';
 }
-
+  
 function setTb(k) {
   if (k !== 'qoror' && !isPro) return openModal();
   curTb = k;
