@@ -309,6 +309,7 @@ const QASIDAH = [
     'Ya \'asyiqol Musthofa absyir binailil muna<br>Qod roqo ka\'sush-shofa wa thoba wafdul hana',
     'Karakter Nahawand yang romantis dan mengalir ringan; cocok dilatih dengan variasi Murokkab (naik) di bagian reff.',
     [[0,.35],[2,.32],[4,.5],[4,.32],[5,.4],[4,.35],[3,.6],[2,.35],[3,.32],[4,.42],[3,.32],[2,.35],[1,.35],[0,.85]]],
+    'audio/Ya Asyiqal Musthofa.mp3'],
   ['Kullul Qulub (Al-Madad)', 'jiharka', 'kurdi', 0, 'Jiharkah (\'Ajam) • Cerah & Penuh Sukacita',
     'كُلُّ الْقُلُوْبِ إِلَى الْحَبِيْبِ تَمِيْلُ • وَمَعِيْ بِذٰلِكَ شَاهِدٌ وَدَلِيْلُ<br>أَمَّا الدَّلِيْلُ إِذَا ذَكَرْتُ مُحَمَّدًا • صَارَتْ دُمُوْعُ الْعَاشِقِيْنَ تَسِيْلُ',
     'Kullul qulubi ilal habibi tamilu • Wa ma\'i bidzalika syahidun wa dalilu<br>Ammad-dalilu idza dzakartu Muhammadan • Shorot dumu\'ul \'asyiqina tasilu',
@@ -338,7 +339,14 @@ const QASIDAH = [
     'يَا خَيْرَ هَادِيْ لِلْأَنَامِ تَسَامٰى<br>عَطْفًا عَلٰى مَنْ ذَابَ فِيْكَ غَرَامَا',
     'Ya khoiro hadi lil anami tasama<br>\'Athfan \'ala man dzaba fika ghoroma',
     'Karakter Rast yang gagah dan mantap, menonjolkan nada Sikah ke-3 dan Awj ke-7 (half-flat).',
-    [[0,.4],[2,.4],[4,.55],[4,.35],[5,.4],[4,.35],[3,.4],[2,.6],[2,.35],[3,.35],[4,.45],[3,.35],[2,.4],[1,.4],[0,.85]]]
+    [[0,.4],[2,.4],[4,.55],[4,.35],[5,.4],[4,.35],[3,.4],[2,.6],[2,.35],[3,.35],[4,.45],[3,.35],[2,.4],[1,.4],[0,.85]]],
+  ['Tholama Asyku Ghoromi', 'nahawand', 'kurdi', 1, 'Nahawand • Syahdu & Mendayu',
+    'طَالَمَا أَشْكُوْ غَرَامِيْ • يَا نُوْرَ الْوُجُوْدْ<br>وَأُنَادِيْ يَا تِهَامِيْ • يَا مَعْدِنَ الْجُوْدْ',
+    'Tholama asyku ghoromi • Ya nurol wujud<br>Wa unadi ya Tihami • Ya ma\'dinal jud',
+    'Sangat populer dibawakan dengan Maqam Nahawand bertempo sedang; nada ke-7 natural (7♮) memberi rasa rindu yang dalam saat menutup bait.',
+    [[0,.40],[2,.35],[4,.55],[4,.35],[5,.40],[4,.35],[3,.35],[2,.65],[2,.35],[3,.35],[4,.45],[3,.35],[2,.35],[1,.35],[0,.90]],
+   'audio/Tholama Asyku.mp3'],
+    '']
 ].map(([title, pm, sm, key, rhythm, arabic, latin, note, mel, audioUrl]) =>
   ({ title, pm, sm, key, rhythm, arabic, latin, note, audioUrl, melody: mel.map(([deg, dur]) => ({ deg, dur })) }));
 
