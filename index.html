@@ -650,9 +650,53 @@ function renderKamus() {
     g.appendChild(d);
   });
 }
+let qasidahAudio = null;
+let activeQasidahBtn = null;
+
+function stopQasidahAudio() {
+  if (qasidahAudio) {
+    qasidahAudio.pause();
+    qasidahAudio.currentTime = 0;
+    qasidahAudio = null;
+  }
+  if (activeQasidahBtn) {
+    activeQasidahBtn.innerHTML = '▶ Putar melodi';
+    activeQasidahBtn = null;
+  }
+}
+
 function playQasidah(i, btn) {
-  const s = QASIDAH[i], dur = playPhrase(MAQAM_DATA[s.pm], ROOT_KEYS[s.key].hz * 2, s.melody), old = btn.innerHTML;
-  btn.textContent = '🔊 Memutar…'; setTimeout(() => btn.innerHTML = old, dur * 1000);
+  const s = QASIDAH[i];
+
+  // Jika tombol yang sama diklik lagi saat MP3 sedang berbunyi -> hentikan
+  if (activeQasidahBtn === btn && qasidahAudio) {
+    stopQasidahAudio();
+    return;
+  }
+  stopQasidahAudio();
+
+  // Prioritaskan file MP3 custom jika tersedia
+  if (s.audioUrl) {
+    qasidahAudio = new Audio(encodeURI(s.audioUrl));
+    activeQasidahBtn = btn;
+    btn.textContent = '⏹ Stop';
+
+    qasidahAudio.onended = () => stopQasidahAudio();
+    qasidahAudio.onerror = () => {
+      stopQasidahAudio();
+      const dur = playPhrase(MAQAM_DATA[s.pm], ROOT_KEYS[s.key].hz * 2, s.melody);
+      btn.textContent = '🔊 Memutar…';
+      setTimeout(() => btn.innerHTML = '▶ Putar melodi', dur * 1000);
+    };
+
+    qasidahAudio.play().catch(() => qasidahAudio.onerror());
+    return;
+  }
+
+  // Fallback jika audioUrl dikosongkan ('')
+  const dur = playPhrase(MAQAM_DATA[s.pm], ROOT_KEYS[s.key].hz * 2, s.melody), old = btn.innerHTML;
+  btn.textContent = '🔊 Memutar…';
+  setTimeout(() => btn.innerHTML = old, dur * 1000);
 }
 function toStudio(i) {
   const s = QASIDAH[i];
